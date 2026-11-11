@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bob Duong | Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;      /* Shuang-style cool gray */
+    --ink:#0B0B0B;        /* electric blue */
+    --black:#0B0B0B;
+    --sans:"Inter Tight", "Helvetica Neue", Arial, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, monospace;
+    --gutter:clamp(20px, 5.6vw, 88px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block;width:100%;height:100%;object-fit:cover}
+  .view{display:none}
+  .view.on{display:block}
+
+  /* ---------- HOME (Shuang) ---------- */
+  .top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;align-items:center;
+       padding:22px var(--gutter) 0;font-size:15px;position:sticky;top:0;z-index:20;
+       background:linear-gradient(var(--paper) 70%, rgba(255,255,255,0));padding-bottom:22px}
+  .top .name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .top a:not(.name){justify-self:center}
+  .top a:hover{opacity:.55}
+  .top a.cur{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+
+  .logo{width:auto;height:54px;object-fit:contain;transition:transform .3s}
+  .name:hover .logo{transform:rotate(-8deg)}
+  .bar .logo{height:30px;filter:invert(1)}
+  .grid{padding-top:clamp(20px,2.4vw,40px)!important}
+  .about{padding-top:clamp(40px,5vw,80px)!important}
+  .intro{padding:34px var(--gutter) 46px;max-width:1100px}
+  .intro p{font-size:clamp(22px,2.4vw,34px);line-height:1.18;letter-spacing:-.015em;font-weight:500}
+  .intro p span{opacity:.5}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.6vw,24px);padding:0 var(--gutter) 90px}
+  .tile{position:relative;display:block;overflow:hidden;aspect-ratio:1.3/1;background:#eee}
+  .tile .art{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+  .tile:hover .art{transform:scale(1.025)}
+  .tile.soon{cursor:default}.tile.soon::after{content:"";position:absolute;inset:0;border:1px solid #000;pointer-events:none;z-index:2}.tile.soon .art{transform:none!important}
+  .soon-badge{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#000;border:1px solid #000;border-radius:999px;padding:7px 14px;background:#fff;white-space:nowrap}
+  .tile .cap{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;
+             padding:14px 16px;font-size:14px;color:#fff;background:var(--ink);
+             transform:translateY(101%);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .tile:hover .cap{transform:none}
+  .tile .cap b{font-weight:700}
+
+  .homefoot{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;padding:28px var(--gutter) 40px;font-size:14px;border-top:1px solid rgba(0,0,0,.2);margin:0 var(--gutter);padding-left:0;padding-right:0}
+  .homefoot a:hover{opacity:.55}
+
+  /* ---------- ABOUT ---------- */
+  .about{padding:40px var(--gutter) 100px;display:grid;grid-template-columns:1.6fr 1.5fr;gap:6vw}
+  .about h1{font-size:clamp(30px,3.6vw,54px);line-height:1.06;letter-spacing:-.025em;font-weight:500}
+  .about .col p{font-size:17px;line-height:1.5;margin-bottom:18px;color:#2a2a2a}
+  .about .col h3{font-size:13px;font-weight:700;margin:30px 0 8px;color:var(--ink)}
+  .about .col li{list-style:none;font-size:16px;line-height:1.6;color:#2a2a2a}
+
+  /* ---------- PROJECT (All Good) ---------- */
+  .bar{position:sticky;top:0;z-index:30;background:var(--black);color:#FFFFFF;display:flex;justify-content:space-between;
+       align-items:center;padding:12px var(--gutter);font-size:15px}
+  .bar .name{font-weight:800;letter-spacing:.02em;text-transform:uppercase;font-size:14px}
+  .bar nav{display:flex;gap:28px}
+  .bar a:hover{opacity:.6}
+  .hero{position:relative;height:min(64vh,640px);min-height:340px;overflow:hidden}
+  .hero .art{position:absolute;inset:0}
+  .hero h1{position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+           font-weight:900;font-size:clamp(48px,8.4vw,132px);letter-spacing:-.035em;line-height:.9;text-transform:uppercase;
+           padding:0 var(--gutter)}
+  .lead{display:grid;grid-template-columns:1fr 260px;gap:6vw;padding:clamp(70px,10vw,140px) var(--gutter)}
+  .lead p{font-size:clamp(22px,2.15vw,32px);line-height:1.22;letter-spacing:-.012em;max-width:980px}
+  .lead p b{font-weight:700}
+  .scope{font-size:14px;line-height:1.5;padding-top:6px}
+  .scope b{display:block;font-weight:700}
+  .row{display:flex;width:100%;height:clamp(240px,34vw,560px)}
+  .row > div{position:relative;overflow:hidden}
+  .story{padding:clamp(80px,10vw,140px) var(--gutter)}
+  .story h2{font-size:clamp(26px,2.4vw,36px);font-weight:700;letter-spacing:-.015em;margin-bottom:22px}
+  .story p{font-size:17px;line-height:1.55;max-width:1240px}
+  .nextp{display:block;padding:clamp(60px,8vw,110px) var(--gutter);border-top:1px solid rgba(255,255,255,.12)}
+  .nextp small{font-size:14px;opacity:.6;display:block;margin-bottom:10px}
+  .nextp span{font-size:clamp(40px,6vw,96px);font-weight:900;letter-spacing:-.035em;text-transform:uppercase;line-height:.9}
+  .nextp:hover span{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:8px}
+  .pfoot{background:var(--black);color:#FFFFFF;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;padding:46px var(--gutter) 56px;font-size:14px;line-height:1.6}
+  .pfoot a:hover{opacity:.6}
+  .pfoot .big{font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+
+  /* placeholder label inside image slots */
+  .slot{position:absolute;left:14px;bottom:12px;font-family:var(--mono);font-size:11px;letter-spacing:.02em;opacity:.7}
+
+  @media (max-width:760px){
+    .top,.homefoot{grid-template-columns:1fr auto auto auto;gap:18px}
+    .top a:not(.name){justify-self:end}
+    .grid{grid-template-columns:1fr}
+    .about,.lead{grid-template-columns:1fr}
+    .row{flex-direction:column;height:auto}
+    .row > div{flex:none!important;height:72vw}
+    .bar nav{gap:16px}
+    .pfoot{grid-template-columns:1fr}
+  }
+
+  /* ---------- UX CASE STUDY (Blarre) ---------- */
+  .cs{--g:#F2F2F2;--mid:#6b6b6b;background:#fff;color:#0B0B0B}
+  .cs-hero{display:grid;grid-template-columns:1fr 1.15fr;min-height:calc(100vh - 54px);border-bottom:1px solid #e6e6e6}
+  .cs-hero .l{padding:clamp(40px,6vw,96px) var(--gutter);display:flex;flex-direction:column;justify-content:space-between;gap:48px}
+  .cs-kicker{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mid)}
+  .cs-hero h1{font-size:clamp(64px,9vw,148px);font-weight:900;letter-spacing:-.05em;line-height:.85;margin:18px 0 26px}
+  .cs-hero .tag{font-size:clamp(20px,1.8vw,26px);line-height:1.25;letter-spacing:-.01em;max-width:560px}
+  .cs-meta{display:grid;grid-template-columns:1fr 1fr;gap:22px 32px;font-size:14px;line-height:1.45}
+  .cs-meta b{display:block;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);margin-bottom:4px}
+  .cs-hero .r{background:var(--g);position:relative;overflow:hidden}
+  .cs-hero .r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  .cs-body{display:grid;grid-template-columns:220px 1fr;gap:0 4vw;padding:0 var(--gutter)}
+  .cs-nav{position:sticky;top:54px;align-self:start;padding:56px 0;font-size:14px}
+  .cs-nav a{display:flex;gap:12px;padding:7px 0;color:#9a9a9a;transition:color .2s}
+  .cs-nav a span{font-family:var(--mono);font-size:11px;padding-top:2px}
+  .cs-nav a.on,.cs-nav a:hover{color:#0B0B0B}
+  .cs-main{min-width:0}
+  .cs-sec{padding:72px 0;border-top:1px solid #e6e6e6}
+  .cs-sec:first-child{border-top:0}
+  .cs-num{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--mid);text-transform:uppercase}
+  .cs-sec h2{font-size:clamp(30px,3.2vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1.02;margin:10px 0 26px;max-width:900px}
+  .cs-sec h3{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:46px 0 12px}
+  .cs-sec p{font-size:17px;line-height:1.55;max-width:760px;margin-bottom:14px;color:#262626}
+  .cs-sec p b{color:#000}
+
+  .cs-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}
+  .cs-card{background:var(--g);padding:22px;font-size:15px;line-height:1.5}
+  .cs-card b{display:block;font-size:17px;margin-bottom:6px}
+  .cs-card .n{font-family:var(--mono);font-size:11px;color:var(--mid);display:block;margin-bottom:22px}
+
+  .cs-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #0B0B0B;margin:34px 0}
+  .cs-stats div{padding:18px 18px 0 0}
+  .cs-stats strong{display:block;font-size:clamp(34px,3.6vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1}
+  .cs-stats span{display:block;font-size:13px;line-height:1.4;margin-top:10px;color:#333}
+  .cs-stats em{display:block;font-style:normal;font-family:var(--mono);font-size:10px;color:#999;margin-top:6px}
+
+  .cs-hmw{background:#0B0B0B;color:#fff;padding:clamp(28px,4vw,56px);margin:40px 0 0}
+  .cs-hmw small{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:#9a9a9a;text-transform:uppercase}
+  .cs-hmw p{color:#fff;font-size:clamp(24px,2.6vw,38px);line-height:1.15;letter-spacing:-.02em;font-weight:500;max-width:none;margin:12px 0 0}
+
+  .cs-board{margin:24px 0 8px;background:var(--g);padding:clamp(12px,2vw,24px);cursor:zoom-in}
+  .cs-board img{height:auto}
+  .cs-cap{font-family:var(--mono);font-size:11px;color:var(--mid);margin-bottom:10px}
+
+  .cs-people{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:22px 0}
+  .cs-people div{border:1px solid #e0e0e0;padding:14px 12px;font-size:13px;line-height:1.4}
+  .cs-people b{display:block;font-size:15px}
+  .cs-people i{font-style:normal;display:inline-block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;background:#0B0B0B;color:#fff;padding:2px 6px;margin:8px 0 6px}
+  .cs-steps{counter-reset:s;list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+  .cs-steps li{counter-increment:s;border-top:2px solid #0B0B0B;padding-top:12px;font-size:14px;line-height:1.45}
+  .cs-steps li::before{content:"0" counter(s);font-family:var(--mono);font-size:11px;color:var(--mid);display:block;margin-bottom:6px}
+  .cs-steps b{display:block;font-size:16px;margin-bottom:4px}
+
+  .cs-table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.45;margin:20px 0}
+  .cs-table th{text-align:left;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--mid);padding:10px 12px 10px 0;border-bottom:1px solid #0B0B0B}
+  .cs-table td{padding:12px 12px 12px 0;border-bottom:1px solid #e6e6e6;vertical-align:top}
+  .cs-table td:first-child{font-weight:700}
+  .cs-table .hl{background:#0B0B0B;color:#fff;padding-left:14px;padding-right:14px}
+  .cs-table .hl + td,.cs-table .hl + th{padding-left:16px}
+  .cs-wrap{overflow-x:auto}
+
+  .cs-insight{display:grid;grid-template-columns:90px 1fr;gap:20px;padding:26px 0;border-top:1px solid #e6e6e6}
+  .cs-insight .big{font-size:64px;font-weight:900;letter-spacing:-.05em;line-height:.8}
+  .cs-insight b{font-size:22px;letter-spacing:-.01em;display:block;margin-bottom:6px}
+  .cs-insight p{margin:0}
+  .cs-quote{font-size:clamp(24px,2.4vw,34px);line-height:1.18;letter-spacing:-.02em;font-weight:500;max-width:900px;margin:28px 0;padding-left:22px;border-left:4px solid #0B0B0B}
+
+  /* phones */
+  .phone{position:relative;width:var(--w,240px);aspect-ratio:402/874;flex:none;background:#111;border-radius:calc(var(--w,240px)*.15);
+         padding:calc(var(--w,240px)*.035);box-shadow:0 30px 60px -20px rgba(0,0,0,.35)}
+  .phone img{width:100%;height:100%;object-fit:cover;border-radius:calc(var(--w,240px)*.115);display:block}
+  .phone::after{content:"";position:absolute;left:50%;top:calc(var(--w,240px)*.065);transform:translateX(-50%);
+         width:28%;height:calc(var(--w,240px)*.075);background:#0a0a0a;border-radius:99px}
+  .flows{position:relative;z-index:3;background:#0B0B0B;color:#fff;margin:40px calc(var(--gutter)*-1) 0 calc(var(--gutter)*-1 - 220px - 4vw);padding:70px 0 40px}
+  .flow{padding:0 0 56px}
+  .flow-h{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:0 var(--gutter);margin-bottom:22px}
+  .flow-h h4{font-size:clamp(22px,2vw,30px);font-weight:700;letter-spacing:-.02em}
+  .flow-h p{color:#aaa;font-size:16px;max-width:620px;margin:0;text-align:left}
+  .strip{display:flex;gap:34px;overflow-x:auto;padding:10px var(--gutter) 24px;scroll-snap-type:x mandatory;scroll-padding-left:var(--gutter);scrollbar-width:thin;scrollbar-color:#444 transparent}
+  .strip figure{scroll-snap-align:start;--w:230px}
+  .strip figcaption{font-size:13px;color:#bbb;margin-top:16px;max-width:var(--w);line-height:1.4}
+  .strip figcaption span{font-family:var(--mono);font-size:10px;color:#777;display:block;margin-bottom:3px}
+  .strip .phone{box-shadow:none;background:#222}
+  .strip .phone::after{background:#000}
+
+  .cs-draft{background:#1d1d1d;margin:22px 0 8px;padding:clamp(14px,2vw,26px)}
+  .cs-draft img{height:auto}
+
+  .cs-bars{display:grid;gap:10px;margin:22px 0;max-width:640px}
+  .cs-bars div{display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:14px;font-size:14px}
+  .cs-bars i{display:block;height:30px;background:#0B0B0B}
+  .cs-bars b{text-align:right}
+
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;place-items:center;z-index:99;padding:4vw;cursor:zoom-out}
+  .lb.on{display:grid}
+  .lb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;background:#fff}
+
+  @media (max-width:980px){
+    .cs-hero{grid-template-columns:1fr}.cs-hero .r{aspect-ratio:1.3/1}
+    .cs-body{grid-template-columns:1fr}.cs-nav{display:none}
+    .flows{margin-left:calc(var(--gutter)*-1)}
+    .cs-stats,.cs-steps{grid-template-columns:1fr 1fr}
+    .cs-people{grid-template-columns:repeat(3,1fr)}
+    .cs-3{grid-template-columns:1fr}
+    .flow-h{flex-direction:column}.flow-h p{text-align:left}
+  }
+  .cs-shot{background:#ececec;border-radius:12px;overflow:hidden;margin:24px 0 8px;cursor:zoom-in;box-shadow:0 20px 50px -25px rgba(0,0,0,.35)}
+  .cs-shot .browser{height:30px;background:#f6f6f6;border-bottom:1px solid #e3e3e3;display:flex;gap:7px;align-items:center;padding:0 12px}
+  .cs-shot .browser i{width:10px;height:10px;border-radius:50%;background:#d0d0d0}
+  .cs-shot img{height:auto}
+  .cs-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:760px){.cs-2{grid-template-columns:1fr}}
+  .gd{background:var(--bg);color:var(--fg)}
+  .gd-hero{min-height:min(58vh,560px);display:grid;place-items:center;padding:60px var(--gutter);border-bottom:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
+  .gd-hero h1{font-weight:900;font-size:clamp(52px,9vw,150px);letter-spacing:-.04em;line-height:.88;text-transform:uppercase;text-align:center}
+  .gd .lead{padding-bottom:clamp(50px,7vw,100px)}
+  .gd-imgs{display:grid;gap:clamp(10px,1.2vw,18px);padding:0 var(--gutter)}
+  .gd-imgs.narrow{max-width:720px;margin:0 auto}
+  .gd-row{display:flex;gap:clamp(10px,1.2vw,18px)}
+  .gd-imgs+.gd-imgs{margin-top:clamp(10px,1.2vw,18px)}
+  .gd-row figure{margin:0;overflow:hidden;cursor:zoom-in;background:color-mix(in srgb,var(--fg) 6%,transparent)}
+  .gd-row img{width:100%;height:100%;object-fit:cover}
+  .gd-row figure:only-child{flex:none!important;width:100%}
+  .gd .story{padding:clamp(70px,9vw,130px) var(--gutter)}
+  .gd .nextp{border-top-color:color-mix(in srgb,var(--fg) 18%,transparent);margin-top:clamp(60px,8vw,110px)}
+  @media (max-width:760px){.gd-row{flex-direction:column}.gd-row figure{flex:none!important;width:100%}}
+  .wip{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--fg);padding:6px 12px;border-radius:99px;margin:0 auto 22px;display:table}
+  .gd-live{padding:0 var(--gutter) clamp(14px,1.6vw,22px)}
+  .gd-live-h{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:0 0 10px}
+  .gd-live iframe{display:block;width:100%;height:min(92vh,1000px);border:0;background:#fff}
+  .gd-video{padding:0 var(--gutter) clamp(14px,1.6vw,22px)}
+  .yt{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:#000}
+  .yt img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+  .yt:hover img{transform:scale(1.02)}
+  .yt .play{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:#fff;display:grid;place-items:center;transition:transform .2s}
+  .yt:hover .play{transform:scale(1.08)}
+  .yt .play svg{width:38px;height:38px;fill:#0b0b0b;margin-left:5px}
+  .yt .yt-l{position:absolute;left:20px;bottom:16px;color:#fff;font-size:14px;font-weight:600;background:rgba(0,0,0,.55);padding:7px 12px}
+  .yt-frame{display:block;width:100%;aspect-ratio:16/9;border:0}
+  .gd-credit{padding:clamp(28px,4vw,48px) var(--gutter) 0;font-size:13px;line-height:1.5;opacity:.75;max-width:900px}
+  .gd-credit a{text-decoration:underline;text-underline-offset:3px}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section class="view" id="v-home">
+  <div class="bar">
+    <a class="name" href="#work" aria-label="Bob Duong, home"><img class="logo" src="data:image/png;base64,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" alt="Bob Duong"></a>
+    <nav><a href="#work">Work</a><a href="#about">About</a></nav>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="view" id="v-about">
+  <div class="bar">
+    <a class="name" href="#work" aria-label="Bob Duong, home"><img class="logo" src="data:image/png;base64,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" alt="Bob Duong"></a>
+    <nav><a href="#work">Work</a><a href="#about">About</a></nav>
+  </div>
+  <div class="about">
+    <h1>I design brands, interfaces and printed work.</h1>
+    <div class="col">
+      <p>I'm Bob (The Hien) Duong, a design student at Temple University's Tyler School of Art and Architecture in Philadelphia.</p>
+      <p>My work covers brand identity, UX/UI design, typography, editorial layout and video.</p>
+      <h3>Practice</h3>
+      <ul><li>Brand Identity</li><li>UX Research &amp; UI Design</li><li>Typography &amp; Print</li><li>Video &amp; Motion</li></ul>
+      <h3>Tools</h3>
+      <ul><li>Figma, FigJam</li><li>Photoshop, Illustrator, InDesign</li><li>Premiere Pro, After Effects</li><li>Rhino</li></ul>
+      <h3>Contact</h3>
+      <ul><li><a href="mailto:bobbienn05@gmail.com">bobbienn05@gmail.com</a></li><li><a href="https://www.linkedin.com/in/bobduong/" target="_blank" rel="noopener">LinkedIn ↗</a></li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECT ============ -->
+<section class="view" id="v-project">
+  <div class="bar">
+    <a class="name" href="#work" aria-label="Bob Duong, home"><img class="logo" src="data:image/png;base64,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" alt="Bob Duong"></a>
+    <nav><a href="#work">Work</a><a href="#about">About</a></nav>
+  </div>
+  <div id="project"></div>
+  <footer class="pfoot">
+    <div><div class="big">Bob Duong</div>Designer, Philadelphia PA</div>
+    <div><a href="#work">Work</a><br><a href="#about">About</a><br><a href="https://www.linkedin.com/in/bobduong/" target="_blank" rel="noopener">LinkedIn</a></div>
+    <div><a href="mailto:bobbienn05@gmail.com">bobbienn05@gmail.com</a><br>© 2026</div>
+  </footer>
+</section>
+
+<template id="tpl-blarre">
+<article class="cs">
+  <header class="cs-hero">
+    <div class="l">
+      <div>
+        <div class="cs-kicker">UX/UI Case Study · iOS App</div>
+        <h1>Blarre!</h1>
+        <p class="tag">A community carpool app that uses the empty seats in cars already making a trip. Commuters share rides at low cost with verified people from their school, workplace or neighborhood.</p>
+      </div>
+      <div class="cs-meta">
+        <div><b>Role</b>UX/UI designer (individual project): research, interviews, synthesis, user flows, UI and prototype</div>
+        <div><b>Context</b>Class project, Temple University · Fall 2026</div>
+        <div><b>Tools</b>Figma, FigJam, Figma Slides</div>
+        <div><b>Deliverables</b>6 interviews, competitor analysis, affinity map, user types, 3 flows, 39-screen clickable prototype</div>
+      </div>
+    </div>
+    <div class="r"><img src="img/blarre/cover.webp" alt="Blarre! app screens: mates looking to join, Home, and drivers heading your way"></div>
+  </header>
+
+  <div class="cs-body">
+    <nav class="cs-nav" aria-label="Case study sections">
+      <a href="#blarre" data-t="cs-context"><span>01</span>Context</a>
+      <a href="#blarre" data-t="cs-discover"><span>02</span>Discover</a>
+      <a href="#blarre" data-t="cs-define"><span>03</span>Define</a>
+      <a href="#blarre" data-t="cs-ideate"><span>04</span>Ideate</a>
+      <a href="#blarre" data-t="cs-design"><span>05</span>Design</a>
+      <a href="#blarre" data-t="cs-iterate"><span>06</span>Iterate</a>
+      <a href="#blarre" data-t="cs-model"><span>07</span>Business model</a>
+      <a href="#blarre" data-t="cs-reflect"><span>08</span>Reflection</a>
+    </nav>
+
+    <div class="cs-main">
+      <!-- 01 -->
+      <section class="cs-sec" id="cs-context">
+        <div class="cs-num">01 · Context</div>
+        <h2>Each commuting option in a large city has a cost.</h2>
+        <p>As a commuting student in Philadelphia, I choose between three options every day, and each has a clear drawback. Philadelphia is the example used here, but commuters in most large cities face similar traffic and costs.</p>
+        <div class="cs-3">
+          <div class="cs-card"><span class="n">Option A</span><b>Public transit</b>Affordable, but delays are frequent and riders do not always feel safe.</div>
+          <div class="cs-card"><span class="n">Option B</span><b>Driving</b>Reliable, but fuel, insurance and parking are expensive, and parking enforcement in Philadelphia is strict.</div>
+          <div class="cs-card"><span class="n">Option C</span><b>Uber / Lyft</b>Convenient, but too expensive for daily use.</div>
+        </div>
+        <h3>Most cars carry only one person</h3>
+        <p>In traffic, most cars around me had a single occupant. Sharing a ride with someone going the same way would split the cost of fuel, and at scale it would reduce the number of cars on the road. The main barrier is safety: most people are not willing to ride with a stranger.</p>
+        <div class="cs-stats">
+          <div><strong>69.2%</strong><span>of US workers drive to work alone</span><em>Census ACS, 2024</em></div>
+          <div><strong>1.4</strong><span>people per car trip on average</span><em>US Dept. of Energy, 2022</em></div>
+          <div><strong>69 hrs</strong><span>a Philly driver loses to traffic each year (6th worst in US)</span><em>INRIX</em></div>
+          <div><strong>$179B</strong><span>yearly US cost of congestion</span><em>Texas A&amp;M Transportation Inst.</em></div>
+        </div>
+        <div class="cs-hmw"><small>Design question</small><p>How might we help commuters in large cities share trips they already make, at low cost and with people they can trust?</p></div>
+      </section>
+
+      <!-- 02 -->
+      <section class="cs-sec" id="cs-discover">
+        <div class="cs-num">02 · Discover</div>
+        <h2>Research plan, interviews and competitive analysis.</h2>
+        <h3>Planning the research</h3>
+        <p>The research plan defined Blarre! as a community carpool: drivers who are already making a trip offer seats to others, which lowers cost and reduces emissions. It identified three target groups (<b>students, workers and parents</b>) and set a measurable goal for each.</p>
+        <div class="cs-board" data-lb><img src="img/blarre/board-plan.webp" alt="Research plan product dashboard in FigJam"></div>
+        <div class="cs-cap">Research plan: product dashboard (FigJam)</div>
+
+        <h3>Talking to commuters</h3>
+        <p>I interviewed six participants, two from each group, across four countries. Recruiting from different cities helped show whether the problems were general to commuting or specific to one city's transit system.</p>
+        <div class="cs-people">
+          <div><i>Student</i><b>Dan</b>Ho Chi Minh City, VN</div>
+          <div><i>Student</i><b>Luan</b>Seattle, WA</div>
+          <div><i>Worker</i><b>Leo</b>Victoria, AU</div>
+          <div><i>Worker</i><b>Marcus</b>Philadelphia, PA</div>
+          <div><i>Parent</i><b>Sarah</b>Greenville, USA</div>
+          <div><i>Parent</i><b>Jack</b>Ho Chi Minh City, VN</div>
+        </div>
+        <p>The interview guide moved from current habits to an ideal carpool system:</p>
+        <ol class="cs-steps">
+          <li><b>Habits</b>How long is your commute? What frustrates you most?</li>
+          <li><b>Attitudes</b>Alone or with others? Have you carpooled? What stops you?</li>
+          <li><b>Trust</b>What would make you comfortable sharing a ride with another user?</li>
+          <li><b>Dream</b>Describe your perfect commute and your ideal carpool system.</li>
+        </ol>
+        <div class="cs-board" data-lb><img src="img/blarre/board-interviews.webp" alt="Interview guide and key takeaways from six interviews in FigJam"></div>
+        <div class="cs-cap">Interview notes + key takeaways from all 6 interviews (FigJam)</div>
+
+        <h3>Scanning the competition</h3>
+        <p>The analysis showed a gap in the market. Uber and Lyft are widely available but too expensive for daily commuting. Scoop is affordable, but it operates in only a few cities and requires an employer partnership.</p>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th></th><th>Uber</th><th>Lyft</th><th>Scoop</th></tr>
+          <tr><td>Focus</td><td>Global ride-hailing</td><td>US ride-hailing</td><td>Daily commute carpools</td></tr>
+          <tr><td>Reach</td><td>~15,000 cities</td><td>All 50 US states</td><td>6 metro areas</td></tr>
+          <tr><td>Strength</td><td>Biggest driver network</td><td>Friendly, community feel</td><td>Lowest price</td></tr>
+          <tr><td>Weakness</td><td>Too pricey for daily use</td><td>Too pricey for daily use</td><td>Tied to employer partners</td></tr>
+        </table></div>
+        <div class="cs-board" data-lb><img src="img/blarre/board-competitive.webp" alt="Competitive landscape analysis board"></div>
+        <div class="cs-cap">Competitive landscape analysis (FigJam)</div>
+        <p class="cs-quote">The opportunity: a price similar to Scoop, without an employer requirement, with trust based on verified schools, workplaces and parent groups.</p>
+      </section>
+
+      <!-- 03 -->
+      <section class="cs-sec" id="cs-define">
+        <div class="cs-num">03 · Define</div>
+        <h2>People are willing to carpool to save money, but only with people they can verify.</h2>
+        <p>I grouped the interview notes on an affinity map. Cost was a leading concern in every group, and riding with strangers was the most common barrier.</p>
+        <div class="cs-board" data-lb><img src="img/blarre/board-insights.webp" alt="Affinity map themes, top 3 insights and feature ideas"></div>
+        <div class="cs-cap">Affinity map → top 3 insights → feature ideas (FigJam)</div>
+        <div class="cs-insight"><div class="big">1</div><div><b>Safety and trust come first.</b><p>People want ID checks, background checks, or a "known circle" of coworkers, classmates or friends before they share a car.</p></div></div>
+        <div class="cs-insight"><div class="big">2</div><div><b>Traffic and time cause stress.</b><p>Commutes of up to 2 hours round trip, plus unpredictable traffic, make people want steady schedules and faster routes.</p></div></div>
+        <div class="cs-insight"><div class="big">3</div><div><b>It has to feel simple and comfortable.</b><p>The app should feel easy and safe, ideally matching people with familiar faces.</p></div></div>
+
+        <h3>User types and success measures</h3>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th>User type</th><th>Needs</th><th>Success looks like</th></tr>
+          <tr><td>Students</td><td>Cheap rides, easy-to-find drivers, faster than transit, rides with classmates</td><td>Rides booked per week, savings vs. transit, repeat use all semester</td></tr>
+          <tr><td>Workers</td><td>Gas and parking savings, punctual rides, matches with similar schedules</td><td>On-time arrivals, high reliability scores, carpools forming by neighborhood</td></tr>
+          <tr><td>Parents</td><td>Safe rides for kids, trusted parents to coordinate with, live tracking, backup rides</td><td>High trust ratings, fewer missed pickups, recurring school routes</td></tr>
+        </table></div>
+        <div class="cs-board" data-lb style="background:#111"><img src="img/blarre/board-usertypes.webp" alt="Defining user types board"></div>
+        <div class="cs-cap">Defining user types and success measures (FigJam)</div>
+      </section>
+
+      <!-- 04 -->
+      <section class="cs-sec" id="cs-ideate">
+        <div class="cs-num">04 · Ideate</div>
+        <h2>From insights to features.</h2>
+        <p>I generated three feature ideas for each insight and selected those that addressed trust most directly.</p>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th>Insight</th><th>Feature ideas</th><th class="hl">Made it into the prototype</th></tr>
+          <tr><td>Safety &amp; trust</td><td>Verified profiles + ID checks · Trusted circles · Live trip tracking</td><td class="hl">Safe Verify at sign-up; verified badges and ratings on every rider</td></tr>
+          <tr><td>Traffic &amp; time</td><td>Smart route suggestions · Commute scheduler · Traffic alerts</td><td class="hl">Saved places on Home; ride scheduling; automatic meetup reminders</td></tr>
+          <tr><td>Simple &amp; comfortable</td><td>One-tap matching · In-app chat + ratings · Favorite drivers</td><td class="hl">"Mates looking to join" list, chat with riders, post-ride rating</td></tr>
+        </table></div>
+        <h3>Three flows</h3>
+        <div class="cs-3">
+          <div class="cs-card"><span class="n">Flow 01</span><b>Getting started</b>Users select their user type once, complete Safe Verify and arrive at Home. Every user in the other flows is therefore verified.</div>
+          <div class="cs-card"><span class="n">Flow 02</span><b>Ride &amp; drive</b>Riders see verified drivers traveling in their direction, and drivers see verified riders and choose whom to pick up.</div>
+          <div class="cs-card"><span class="n">Flow 03</span><b>Community forum</b>Users post ride requests to their group, message each other and plan recurring carpools with familiar people.</div>
+        </div>
+      </section>
+
+      <!-- 05 -->
+      <section class="cs-sec" id="cs-design">
+        <div class="cs-num">05 · Design</div>
+        <h2>The first draft followed a ride-hailing model.</h2>
+        <p>The first draft was a booking flow: enter a pickup and destination, choose a Student, Worker or Parent ride, wait for a "drive mate," then rate the trip. The flow was functional, but riders could not see who would pick them up, which was the main need participants described.</p>
+        <div class="cs-draft" data-lb><img src="img/blarre/draft1.webp" alt="Draft 1 wireframes: booking, searching for a drive mate, arrival, on trip and rating"></div>
+        <div class="cs-cap">Draft 1 wireframes (Figma)</div>
+        <h3>Revision: from ride-hailing to a trusted carpool</h3>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th>Draft 1</th><th class="hl">Final</th><th>Why</th></tr>
+          <tr><td>Pick a ride type on every trip</td><td class="hl">Choose Student, Worker or Parent once, at sign-up</td><td>Matching and groups can use who you are</td></tr>
+          <tr><td>Safe Verify was optional</td><td class="hl">Safe Verify required before the first ride</td><td>Trust was the #1 blocker</td></tr>
+          <tr><td>The app assigns a driver</td><td class="hl">Both sides see rating, role and verified badge, then choose</td><td>Both parties know who they are riding with</td></tr>
+          <tr><td>Booking only</td><td class="hl">A Forum for ride requests and recurring carpools</td><td>Supports rides with familiar people</td></tr>
+        </table></div>
+
+        <div class="flows">
+          <div class="flow">
+            <div class="flow-h"><h4>Getting started</h4><p>Select a user type once, verify identity and arrive at Home.</p></div>
+            <div class="strip">
+              <figure><div class="phone"><img src="img/blarre/launch.webp" alt="Launch screen" loading="lazy"></div><figcaption><span>01</span>Launch</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/usertype.webp" alt="Choose user type: Student" loading="lazy"></div><figcaption><span>02</span>Choose who you are, once</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/safeverify.webp" alt="Safe Verify form" loading="lazy"></div><figcaption><span>03</span>Safe Verify: school email + ID</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/verified.webp" alt="You are Safe Verified" loading="lazy"></div><figcaption><span>04</span>Verified before the first ride</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/home.webp" alt="Home with saved places and map" loading="lazy"></div><figcaption><span>05</span>Home: saved places, one search</figcaption></figure>
+            </div>
+          </div>
+          <div class="flow">
+            <div class="flow-h"><h4>Ride with Blarre!</h4><p>View verified drivers heading the same way, share the cost and rate the ride.</p></div>
+            <div class="strip">
+              <figure><div class="phone"><img src="img/blarre/choosedriver.webp" alt="3 drivers heading your way" loading="lazy"></div><figcaption><span>01</span>Pick from drivers going your way</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/ridedetails.webp" alt="Ride details and cost split" loading="lazy"></div><figcaption><span>02</span>Ride details + cost share</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/ontrip.webp" alt="On trip with share and SOS" loading="lazy"></div><figcaption><span>03</span>On trip: share trip, SOS</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/rate.webp" alt="Rate your driver" loading="lazy"></div><figcaption><span>04</span>Rate + add to favorites</figcaption></figure>
+            </div>
+          </div>
+          <div class="flow">
+            <div class="flow-h"><h4>Become a driver</h4><p>Drivers see riders who want to join, with ratings and roles, and choose whom to pick up.</p></div>
+            <div class="strip">
+              <figure><div class="phone"><img src="img/blarre/mates.webp" alt="4 mates looking to join you" loading="lazy"></div><figcaption><span>01</span>Verified mates on your route</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/accept.webp" alt="Accept ride with pickup and drop-off" loading="lazy"></div><figcaption><span>02</span>Accept with pickup + drop-off</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/wallet.webp" alt="Driver wallet and earnings" loading="lazy"></div><figcaption><span>03</span>Wallet + weekly payout</figcaption></figure>
+            </div>
+          </div>
+          <div class="flow">
+            <div class="flow-h"><h4>Community</h4><p>Post a ride to a group, message other users and manage a verified profile.</p></div>
+            <div class="strip">
+              <figure><div class="phone"><img src="img/blarre/forum.webp" alt="Community forum feed" loading="lazy"></div><figcaption><span>01</span>Forum: ride requests by group</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/chat.webp" alt="Chat with John" loading="lazy"></div><figcaption><span>02</span>Chat to set a meetup</figcaption></figure>
+              <figure><div class="phone"><img src="img/blarre/profile.webp" alt="Profile with verified badges" loading="lazy"></div><figcaption><span>03</span>Profile + trusted circles</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section class="cs-sec" id="cs-iterate">
+        <div class="cs-num">06 · Iterate</div>
+        <h2>Addressing critique through a design system.</h2>
+        <p>A design critique produced 12 notes on the high-fidelity screens. Most concerned consistency, so I addressed them with shared styles and components rather than individual screen edits.</p>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th>Critique note</th><th class="hl">What I changed</th></tr>
+          <tr><td>"Set typography styles"</td><td class="hl">An 11-style Inter type scale, Display 32 → Caption 11, on every screen</td></tr>
+          <tr><td>"Button text is too big"</td><td class="hl">One Button component: 48px tall, 16px semibold, Light / Dark / Accent</td></tr>
+          <tr><td>"Icons should be 24 or 32px"</td><td class="hl">A Tab Bar component with 24px icons; header icons standardized</td></tr>
+          <tr><td>"Update Safe Verify to industry standards"</td><td class="hl">Labeled 48px inputs, date picker, role dropdown, dashed ID upload</td></tr>
+          <tr><td>"Use a 6 / 12 / 24 / 32 spacing rule"</td><td class="hl">Lists and sheets rebuilt in auto layout with 12/24px gaps, 24px margins</td></tr>
+          <tr><td>"Bubbles need side margins"</td><td class="hl">16px chat margins, one consistent keyboard, a proper message bar</td></tr>
+        </table></div>
+        <p>I also rebuilt the prototype: 39 iPhone 17 Pro screens, a working tab bar on every screen and five starting points for presentation, with no dead ends.</p>
+      </section>
+
+      <!-- 07 -->
+      <section class="cs-sec" id="cs-model">
+        <div class="cs-num">07 · Business model</div>
+        <h2>Revenue from partners, shared costs for riders.</h2>
+        <p>Most revenue comes from <b>college and employer partners</b>, not from a commission on each fare. Riders pay only their share of the trip's real cost (capped at the 2026 IRS rate of 72.5¢/mile) plus a flat $0.99, waived for partner members. Drivers keep 100% of the cost share.</p>
+        <h3>Cost per rider decreases as the car fills</h3>
+        <p>On a 6-mile trip the total cost stays at $4.35, so each additional rider lowers the price for everyone.</p>
+        <div class="cs-bars">
+          <div><span>1 rider</span><i style="width:100%"></i><b>$4.35</b></div>
+          <div><span>2 riders</span><i style="width:50%"></i><b>$2.18</b></div>
+          <div><span>3 riders</span><i style="width:33%"></i><b>$1.45</b></div>
+        </div>
+        <p style="font-size:13px;color:#777">Illustrative figures, not actual pricing. Insurance and cost-sharing rules would require legal review before launch.</p>
+      </section>
+
+      <!-- 08 -->
+      <section class="cs-sec" id="cs-reflect">
+        <div class="cs-num">08 · Reflection</div>
+        <h2>Key learnings.</h2>
+        <div class="cs-3">
+          <div class="cs-card"><b>Research shaped the product, not only the interface.</b>The project began as a booking tool. Interviews showed that the central problem was trust, which changed onboarding, matching and the forum.</div>
+          <div class="cs-card"><b>Systems are more effective than individual fixes.</b>A type scale, a small set of components and one spacing rule resolved issues across all screens.</div>
+          <div class="cs-card"><b>The problem is not limited to one city.</b>Participants in four countries described similar frustrations, which suggests the concept can apply in other cities.</div>
+        </div>
+        <h3>Next steps</h3>
+        <ol class="cs-steps">
+          <li><b>Test</b>Run usability tests of all three flows with at least five commuters and measure task completion.</li>
+          <li><b>Trusted circles</b>Private carpool groups for a school, workplace or parent group.</li>
+          <li><b>Safety for parents</b>Live trip sharing and a guaranteed backup ride home.</li>
+          <li><b>Pilot</b>Launch on one campus at a time, beginning with Temple commuters.</li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</article>
+<div class="lb" id="lb"><img alt=""></div>
+</template>
+
+<template id="tpl-ask-sfs">
+<article class="cs">
+  <header class="cs-hero">
+    <div class="l">
+      <div>
+        <div class="cs-kicker">Temple AI Build Challenge · Team 12 · Student app + staff tool</div>
+        <h1>Ask SFS</h1>
+        <p class="tag">A two-sided support tool for Temple Student Financial Services. Students get clear answers about aid, bills and refunds on their phones, and SFS staff work from a sorted inbox where every reply is approved by a person.</p>
+      </div>
+      <div class="cs-meta">
+        <div><b>Team</b>Taylor Edney, The Hien (Bob) Duong, Scott Lipscomb</div>
+        <div><b>Context</b>Temple AI Build Challenge · Fall 2026 · one-week build, Demo Day Nov 6</div>
+        <div><b>My role</b>Research, UX/UI design in Figma, prototype</div>
+        <div><b>Built</b>Student mobile app (installable web app) + SFS staff desktop tool</div>
+      </div>
+    </div>
+    <div class="r"><img src="img/sfs/cover.webp" alt="Ask SFS staff inbox on desktop and student app answering a question on iPhone"></div>
+  </header>
+
+  <div class="cs-body">
+    <nav class="cs-nav" aria-label="Case study sections">
+      <a href="#ask-sfs" data-t="sfs-problem"><span>01</span>Problem</a>
+      <a href="#ask-sfs" data-t="sfs-research"><span>02</span>Our research</a>
+      <a href="#ask-sfs" data-t="sfs-both"><span>03</span>Two-sided problem</a>
+      <a href="#ask-sfs" data-t="sfs-student"><span>04</span>Student app</a>
+      <a href="#ask-sfs" data-t="sfs-staff"><span>05</span>Staff tool</a>
+      <a href="#ask-sfs" data-t="sfs-resp"><span>06</span>Responsible design</a>
+      <a href="#ask-sfs" data-t="sfs-ai"><span>07</span>AI use</a>
+      <a href="#ask-sfs" data-t="sfs-next"><span>08</span>What's next</a>
+    </nav>
+
+    <div class="cs-main">
+      <section class="cs-sec" id="sfs-problem">
+        <div class="cs-num">01 · Problem</div>
+        <h2>Students wait too long for clear answers about their finances.</h2>
+        <p>As a transfer student, I waited almost a month to learn my scholarship amount and eventually asked for help on Reddit. Our research showed this experience is common. When students cannot find answers online, they call and email. Staff receive large volumes of repeated questions, response times increase, and students fall behind on bills, holds and aid deadlines.</p>
+        <div class="cs-hmw"><small>How might we</small><p>How might we help Temple students get the right financial answer, with the source and the next step, any time of day, while giving SFS staff time back for the hard cases?</p></div>
+      </section>
+
+      <section class="cs-sec" id="sfs-research">
+        <div class="cs-num">02 · Our research</div>
+        <h2>Research with students came before design.</h2>
+        <p>Although this was an AI competition, <b>the research was conducted by our team</b>. We selected the problem, carried out student outreach, a survey and interviews, and verified every fact before presenting it.</p>
+        <div class="cs-3">
+          <div class="cs-card"><span class="n">Students</span><b>Reddit outreach, survey and interviews</b>We posted on r/Temple and spoke with students directly about their experiences with SFS.</div>
+          <div class="cs-card"><span class="n">History</span><b>A recurring issue over 15 years</b>The Temple News archive documents SFS complaints from 2011 to the present. Each time, the response was additional staff, and demand eventually exceeded capacity again.</div>
+          <div class="cs-card"><span class="n">Website audit</span><b>The SFS website</b>More than 100 links organized by office rather than by student question, unexplained terms (SAP, SEOG, PHEAA), expired dates and leftover template text.</div>
+        </div>
+        <p>We also compared SFS with three other problem areas (advising, TUportal and wellness), reviewed national financial aid surveys, and studied universities already using AI in this area, such as Georgia State's "Pounce" chatbot and UCLA's BruinChat.</p>
+        <div class="cs-stats">
+          <div><strong>~1 mo</strong><span>my own wait to learn my scholarship amount as a transfer</span><em>Personal experience</em></div>
+          <div><strong>6+</strong><span>places students bounce between: SFS site, Bursar, TUportal, TUpay, QLess, email</span><em>Website audit</em></div>
+          <div><strong>21%</strong><span>of students and parents missed an important aid message</span><em>National survey, Aug 2026</em></div>
+          <div><strong>8 in 10</strong><span>aid applicants never had a one-on-one with an aid officer</span><em>National survey</em></div>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="sfs-both">
+        <div class="cs-num">03 · Two-sided problem</div>
+        <h2>The problem affects both students and staff.</h2>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th>Students</th><th class="hl">SFS staff</th></tr>
+          <tr><td style="font-weight:400">Dropped calls, and emails that take days or weeks to answer</td><td class="hl">Too few staff for too many questions</td></tr>
+          <tr><td style="font-weight:400">Unclear what aid covers, or whether a question belongs to SFS or the Bursar</td><td class="hl">Several systems must be checked to find one answer</td></tr>
+          <tr><td style="font-weight:400">Appointments are limited exactly when they need help: first weeks and bill due dates</td><td class="hl">The same repeat questions spike at the same times every semester</td></tr>
+          <tr><td style="font-weight:400">Pay out of pocket or receive holds while grants are delayed</td><td class="hl">Staff turnover means new staff are frequently in training</td></tr>
+        </table></div>
+        <p class="cs-quote">We therefore designed a single loop: the more questions students can resolve on their own, the fewer emails staff receive, and the remaining emails arrive already sorted.</p>
+      </section>
+
+      <section class="cs-sec" id="sfs-student">
+        <div class="cs-num">04 · Student mobile app</div>
+        <h2>Clear financial information on a mobile app.</h2>
+        <p>An installable web app in Temple cherry with an iOS-style layout and four tabs: Home, Ask, Money and Tasks. Home shows what a student owes after aid. Ask responds in two sentences and up to three steps, names the correct office and links to the official source. When staff help is needed, "Prep my case" summarizes the question so it can be resolved in one visit.</p>
+        <div class="flows" style="margin-top:34px">
+          <div class="flow">
+            <div class="flow-h"><h4>Student app</h4><p>Demo sign-in with fictional student profiles. There is no password field, so real Temple credentials cannot be entered.</p></div>
+            <div class="strip">
+              <figure><div class="phone"><img src="img/sfs/welcome.webp" alt="Ask SFS welcome screen" loading="lazy"></div><figcaption><span>01</span>Welcome: one visit, not five</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/accounts.webp" alt="Choose a demo student" loading="lazy"></div><figcaption><span>02</span>Demo sign-in (real app: Temple SSO)</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/home.webp" alt="Home: estimated balance after aid" loading="lazy"></div><figcaption><span>03</span>Home: what you owe after aid</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/ask_empty.webp" alt="Ask screen with suggested questions" loading="lazy"></div><figcaption><span>04</span>Ask in your own words, any language</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/ask_answer.webp" alt="Answer with steps, office and source" loading="lazy"></div><figcaption><span>05</span>Answer + steps + office + source</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/money.webp" alt="Money breakdown" loading="lazy"></div><figcaption><span>06</span>Money: bill, aid, what you pay</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/tasks.webp" alt="Tasks to do" loading="lazy"></div><figcaption><span>07</span>Tasks before they become holds</figcaption></figure>
+              <figure><div class="phone"><img src="img/sfs/help.webp" alt="Get help from SFS: prep my case" loading="lazy"></div><figcaption><span>08</span>Prep my case for SFS</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="sfs-staff">
+        <div class="cs-num">05 · Staff desktop tool</div>
+        <h2>A sorted inbox with human approval of every reply.</h2>
+        <p>Staff use a mail-style inbox in which messages are tagged by topic and urgency and summarized in one line. A counselor can generate a draft reply based on SFS policy, edit it and approve it. No message is sent automatically. The Trends view shows the most common questions each week, so a single action, such as an email update or a revised web page, can address many questions at once.</p>
+        <div class="cs-shot" data-lb><div class="browser"><i></i><i></i><i></i></div><img src="img/sfs/staff-draft.webp" alt="Staff inbox with a drafted reply waiting for approval" loading="lazy"></div>
+        <div class="cs-cap">Inbox → open a case → drafted reply, cited to policy → "Approve &amp; send"</div>
+        <div class="cs-2">
+          <div><div class="cs-shot" data-lb><div class="browser"><i></i><i></i><i></i></div><img src="img/sfs/staff-trends.webp" alt="Trends: what students are asking" loading="lazy"></div><div class="cs-cap">Trends: address common questions in one action</div></div>
+          <div><div class="cs-shot" data-lb><div class="browser"><i></i><i></i><i></i></div><img src="img/sfs/staff-policy.webp" alt="Policy lookup" loading="lazy"></div><div class="cs-cap">Policy lookup: consistent answers across counselors</div></div>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="sfs-resp">
+        <div class="cs-num">06 · Responsible design</div>
+        <h2>Designing for accuracy, oversight and privacy.</h2>
+        <div class="cs-3">
+          <div class="cs-card"><b>Official sources only</b>Every answer is based on public SFS and Bursar pages and links to its source. Financial decisions include a note to confirm with SFS.</div>
+          <div class="cs-card"><b>Human oversight</b>Staff approve every drafted reply. When the tool cannot answer, it says so and refers the student to a staff contact.</div>
+          <div class="cs-card"><b>Privacy</b>The prototype uses fictional demo students only, with no real student data. The app warns users not to enter a TUid, SSN or bank details. A real launch would require SFS approval and a FERPA review.</div>
+        </div>
+      </section>
+
+      <section class="cs-sec" id="sfs-ai">
+        <div class="cs-num">07 · AI use declaration</div>
+        <h2>How AI was used, and what the team did.</h2>
+        <div class="cs-wrap"><table class="cs-table">
+          <tr><th>Tool</th><th>What we used it for</th></tr>
+          <tr><td>Claude (Anthropic)</td><td>Gathering and summarizing public sources (Temple News archive, national surveys, other schools), writing and debugging the prototype code, and drafting the slide deck and script</td></tr>
+          <tr><td>Figma Make</td><td>Exploring early screen layouts, which I then refined manually in Figma</td></tr>
+          <tr><td>In the product</td><td>The live prototype answers with an answer engine we built on official SFS policy text (with typo handling, small talk and safe hand-offs). A Claude-powered version was shown on the same facts; a real pilot would run AI inside Temple's own systems.</td></tr>
+        </table></div>
+        <div class="cs-hmw" style="margin-top:28px"><small>Done by the team, not AI</small><p>Choosing the problem. The Reddit outreach, survey and interviews with students. Design decisions and the final UI design in Figma. Checking every fact and number before it went in the deck.</p></div>
+      </section>
+
+      <section class="cs-sec" id="sfs-next">
+        <div class="cs-num">08 · What's next</div>
+        <h2>A small pilot within Temple's systems.</h2>
+        <ol class="cs-steps">
+          <li><b>Staff research</b>Interview SFS and One Stop counselors about the tasks that take the most time.</li>
+          <li><b>Single-topic pilot</b>Late aid before the January bill, the most common question in our research.</li>
+          <li><b>Real sign-in</b>Temple SSO and real account data, after a FERPA review.</li>
+          <li><b>Evaluation</b>Measure repeat emails, response times and unexpected holds.</li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</article>
+<div class="lb" id="lb"><img alt=""></div>
+</template>
+
+<script>
+/* =====================================================================
+   EDIT YOUR WORK HERE.
+   - Every image slot has a `src`. Leave it "" to show the designed
+     placeholder; put an image path/URL there when you host the site.
+   - `cover` is the thumbnail on the home grid, `hero` is the full-bleed
+     banner on the project page.
+   ===================================================================== */
+const PROJECTS = [
+  {
+    id:"blarre", title:"Blarre!", year:"2026", motif:"route",
+    c:{bg:"#FFFFFF", fg:"#000000", a:"#000000", b:"#FFFFFF", c:"#BDBDBD"},
+    cover:"img/blarre/cover.webp", hero:"", layout:"case",
+    lead:"is a community carpool app for big-city commuters, matching neighbors who already make the same trip, so the ride feels shared rather than hailed.",
+    scope:["UX Research","Information Architecture","UI Design","Prototyping"],
+    rows:[
+      [{w:34,label:"Onboarding screens",src:""},{w:33,label:"Route match",src:""},{w:33,label:"Ride details",src:""}],
+      [{w:60,label:"User flow",src:""},{w:40,label:"Component set",src:""}],
+    ],
+    story:[
+      {h:"Same Route, Same Street", p:"Blarre starts from a simple observation about city commuting: plenty of people travel the same route at the same time, alone. Philadelphia served as the test city, but the system is designed for any dense metro. Trust, timing and convenience come first, with the community layer making repeat rides feel familiar."},
+    ],
+    rows2:[[{w:100,label:"Full prototype overview",src:""}]],
+  },
+  {
+    id:"ask-sfs", title:"Ask SFS", year:"2026", motif:"ab",
+    c:{bg:"#000000", fg:"#FFFFFF", a:"#FFFFFF", b:"#EDEDED", c:"#4A4A4A"},
+    cover:"img/sfs/cover.webp", hero:"", layout:"case",
+    lead:"", scope:["Research","UX/UI Design","AI Prototype"], rows:[], story:[], rows2:[],
+  },
+  {id:"salt",title:"Salt",titleImg:"img/salt/wordmark-w.webp",year:"2026",layout:"gd",cover:"img/salt/wall.webp",c:{bg:"#000000",fg:"#FFFFFF"},fullLead:true,lead:"Inspired by the salt fields of Camargue, Southern France, SALT combines traditional Provençal flavors with modern dining. Our playful salt farmer mascot pays tribute to the region’s heritage while bringing personality to SALT’s minimalist visual identity. Featured across menus, packaging, and branding, he creates a fun, welcoming, and recognizable experience.",scope:["Naming","Brand Identity","Mascot Illustration","Menu & Print","Merch & 3D"],tools:"Illustrator · Photoshop · InDesign · Procreate · Rhino",narrow:false,rows:[],story:[],blocks:[{"t": "rows", "rows": [[{"src": "img/salt/wall.webp", "r": 1.5}], [{"src": "img/salt/logo.webp", "r": 1.0}, {"src": "img/salt/face.webp", "r": 1.0}]]}, {"t": "text", "h": "Get to Know Our Mascot", "p": "Our mascot is half salt farmer, half French server. He has the wide-brimmed hat of the Camargue farmers who have harvested salt for generations, and the black coat and bow tie of a classic French server."}, {"t": "rows", "rows": [[{"src": "img/salt/poster-fish.webp", "r": 0.6663}, {"src": "img/salt/poster-souffle.webp", "r": 0.6667}, {"src": "img/salt/poster-cheers.webp", "r": 0.6663}]]}, {"t": "rows", "rows": [[{"src": "img/salt/aframe.webp", "r": 1.3333}], [{"src": "img/salt/sign.webp", "r": 1.5}, {"src": "img/salt/cap.webp", "r": 1.0503}]]}, {"t": "text", "h": "One Front, Three Menus", "p": "The menu is a postcard: every menu shares the same front, with the salt farmer climbing the salt mounds and a Salt stamp. The backs change for each menu: food, drinks and dessert, each with its own color and a different farmer hiding in the corner."}, {"t": "rows", "rows": [[{"src": "img/salt/menu-front.webp", "r": 1.4126}, {"src": "img/salt/menu-food.webp", "r": 1.4085}], [{"src": "img/salt/menu-drinks.webp", "r": 1.406}, {"src": "img/salt/menu-dessert.webp", "r": 1.4126}]]}, {"t": "text", "h": "The Website", "p": "A simple site for menus, contact and reservations, built around the same black, white and script look."}, {"t": "rows", "rows": [[{"src": "img/salt/website.webp", "r": 1.604, "screen": {"v": "img/salt/web-hero.mp4", "poster": "img/salt/web-hero-poster.webp", "box": [10.766, 14.871, 77.591, 70.141], "over": ["img/salt/web-tagline.png", 12.409, 74.063, 26.46]}}]]}, {"t": "text", "h": "Brand Elements", "p": "A set of hand-drawn characters used across the brand."}, {"t": "rows", "rows": [[{"src": "img/salt/elements.webp", "r": 1.4827}]]}, {"t": "embed", "src": "interactive/salt-mascot.html", "label": "Live: the animated mascot", "hint": "Move your cursor near him \u00b7 click him", "h": "min(70vh,640px)"}, {"t": "text", "h": "Salt & Pepper", "p": "The mascot as a 3D-modeled salt and pepper shaker set, with a black coat for one and a white coat for the other. Salt pours from the holes in his hat."}, {"t": "rows", "rows": [[{"src": "img/salt/shakers.webp", "r": 1.5186}]]}, {"t": "embed", "src": "interactive/salt-shaker.html", "label": "Live: 3D shaker", "hint": "Drag to turn him", "h": "min(80vh,720px)"}]},
+  {id:"is-it-finished",coverVideo:"img/iif/tile.mp4",coverPoster:"img/iif/tile-poster.webp",title:"Is It Finished?",short:"Is It Finished? (Interactive)",year:"2026",layout:"gd",embed:"interactive/is-it-finished.html",cover:"img/iif/mid.webp",coverPos:"center 30%",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is an interactive poster built on the Oblique Strategy card \u201cIs it finished?\u201d, made for a fictional exhibition of works in progress. Your cursor decides when it's done.",scope:["Interactive Poster","Custom Lettering","Type System"],tools:"Photoshop · Illustrator · Custom typeface · Vibe coding (Claude)",narrow:false,rows:[[{"src":"img/iif/start.webp","r":0.75},{"src":"img/iif/mid.webp","r":0.75},{"src":"img/iif/end.webp","r":0.75}]],story:[]},
+  {id:"la-traviata",title:"La Traviata",short:"La Traviata Poster",year:"2026",layout:"gd",cover:"img/gd/poster-mock.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is an opera poster for Verdi's La Traviata. A skull inside a clock stands for Violetta's limited time and fading life.",scope:["Poster Design", "Symbol", "Typography"],tools:"Illustrator \u00b7 Photoshop",narrow:false,rows:[[{"src": "img/gd/poster-mock.webp", "r": 1.4286}],[{"src": "img/gd/poster-1.webp", "r": 0.7059}]],story:[]},
+  {id:"peaky-ballot",title:"Hierarchy Ballot",short:"Peaky Blinders Ballot",year:"2026",layout:"gd",cover:"img/gd/ballot-mock.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"reimagines an election ballot for a fictional 1920s Birmingham election, set in the gritty world of Peaky Blinders.",scope:["Information Design", "Typographic Hierarchy", "Print"],tools:"InDesign \u00b7 Photoshop",narrow:false,rows:[[{"src": "img/gd/ballot-mock.webp", "r": 1.3001}], [{"src": "img/gd/ballot.webp", "r": 0.5625}]],story:[]},
+  {id:"peanuts-cards",title:"Pop Culture Business Cards",short:"Peanuts Cards",year:"2026",layout:"gd",cover:"img/gd/cards-mock-charlie.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is a business card system for a small team inspired by the world of Snoopy and the Peanuts gang: one consistent layout, adjusted for each character.",scope:["Identity System", "Business Cards", "Typography"],tools:"Illustrator \u00b7 InDesign \u00b7 Procreate",narrow:false,rows:[[{"src": "img/gd/cards-mock-charlie.webp", "r": 1.4143}], [{"src": "img/gd/cards-charlie-front.webp", "r": 1.75}, {"src": "img/gd/cards-charlie-back.webp", "r": 1.75}], [{"src": "img/gd/cards-mock-snoopy.webp", "r": 1.4143}, {"src": "img/gd/cards-mock-woodstock.webp", "r": 1.4143}], [{"src": "img/gd/cards-snoopy-front.webp", "r": 1.75}, {"src": "img/gd/cards-snoopy-back.webp", "r": 1.75}], [{"src": "img/gd/cards-woodstock-front.webp", "r": 1.75}, {"src": "img/gd/cards-woodstock-back.webp", "r": 1.75}]],credit:"Pattern images: <a href=\"https://www.michaels.com/product/peanuts-snoopy-woodstock-toss-on-white-cotton-fabric-10736986\" target=\"_blank\" rel=\"noopener\">Peanuts Snoopy &amp; Woodstock Toss on White Cotton Fabric</a> and <a href=\"https://www.michaels.com/product/peanuts-woodstock-blue-cotton-fabric-10736990\" target=\"_blank\" rel=\"noopener\">Peanuts Woodstock Blue Cotton Fabric</a>, Michaels. Peanuts characters \u00a9 Peanuts Worldwide LLC. Student project, not affiliated with Peanuts.",story:[{"h": "Clear at Small Sizes", "p": "The goal was a visual hierarchy where the most important details still stand out at business-card size. I built the system in InDesign with paragraph and character styles so every card stays consistent, with playful type and a clean palette taken from the Peanuts style."}]},
+  {id:"dive-together",title:"Dive Together",short:"Zine: Dive Together",year:"2026",layout:"gd",cover:"img/gd/zine-mock-cover.webp",c:{bg:"#000000",fg:"#FFFFFF"},credit:"Text: TED Radio Hour (NPR), \u201cCurious stories of coexistence,\u201d with Manoush Zomorodi and Philip Johns, March 21, 2025.",lead:"is a five-spread zine about memory, transformation and how cities and wildlife learn to live together.",scope:["Editorial Design", "Typography", "Layout"],tools:"InDesign \u00b7 Photoshop",narrow:false,rows:[[{"src": "img/gd/zine-mock-cover.webp", "r": 1.4991}], [{"src": "img/gd/zine-p1.webp", "r": 0.7143}, {"src": "img/gd/zine-p2.webp", "r": 1.4286}], [{"src": "img/gd/zine-p3.webp", "r": 1.4286}], [{"src": "img/gd/zine-p4.webp", "r": 1.4286}], [{"src": "img/gd/zine-p5.webp", "r": 1.4286}, {"src": "img/gd/zine-p7.webp", "r": 0.7143}], [{"src": "img/gd/zine-p6.webp", "r": 1.4286}], [{"src": "img/gd/zine-mock-1.webp", "r": 1.438}, {"src": "img/gd/zine-mock-3.webp", "r": 1.438}], [{"src": "img/gd/zine-mock-2.webp", "r": 1.4382}, {"src": "img/gd/zine-mock-4.webp", "r": 1.5}]],story:[{"h": "Pacing the Story", "p": "I chose a passage that felt emotionally strong and paired it with public-domain images that are more symbolic than literal. Across five spreads I focused on pacing, image flow and composition, using a limited palette and pull quotes to land the key moments."}]},
+  {id:"furry-vet",title:"Furry Veterinarian",year:"2026",layout:"gd",cover:"img/gd/vet-thumb.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is a brand for a veterinary clinic: a tiger in a medical mask and cap, built to feel bold and energetic while staying professional.",scope:["Logo", "Brand Identity", "Style Tile"],tools:"Illustrator \u00b7 Photoshop",narrow:false,rows:[[{"src": "img/gd/brand-color.webp", "r": 1.708}, {"src": "img/gd/brand-bw.webp", "r": 1.713}], [{"src": "img/gd/brand-tile.webp", "r": 1.779}]],story:[]},
+  {id:"medieval-musicfest",title:"Medieval Musicfest",year:"2026",layout:"gd",cover:"img/gd/logo-bw.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is an art-directed logo for a fictional music festival: a castle tower that doubles as piano keys, designed in black and white first, then in color.",scope:["Logo Design","Art Direction","Black & White + Color"],tools:"Illustrator",narrow:false,rows:[[{"src": "img/gd/logo-bw.webp", "r": 1.75}], [{"src": "img/gd/logo-color.webp", "r": 1.75}]],story:[]},
+  {id:"album-cover",title:"Album Cover",year:"2026",layout:"gd",cover:"img/gd/album-mock.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is a cover for Piano Sonata No. 1 in F minor: II. Adagio, a calm, emotional classical piece, built to feel timeless and modern at once.",scope:["Album Art", "Photo Compositing", "Typography"],tools:"Photoshop",narrow:false,rows:[[{"src": "img/gd/album-mock.webp", "r": 1.0}],[{"src": "img/gd/album-2.webp", "r": 1.0}]],story:[]},
+  {id:"phucs-story",title:"Phuc's Story",short:"Phuc's Story (Documentary)",year:"2025",layout:"gd",yt:"17kEkbEIrBg",cover:"img/doc/thumb.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is a short documentary about studying abroad. Phuc shares his personal experience: the challenges he faced, the opportunities he discovered, and the lessons he learned along the way.",scope:["Documentary","Filming","Editing"],tools:"Premiere Pro · After Effects",narrow:false,rows:[[{"src": "img/doc/street.webp", "r": 2.275}], [{"src": "img/doc/interview.webp", "r": 2.275}, {"src": "img/doc/laundry.webp", "r": 2.279}], [{"src": "img/doc/elevator.webp", "r": 2.275}, {"src": "img/doc/interview2.webp", "r": 2.275}]],story:[]},
+  {id:"icons-pattern",title:"Icons & Pattern",year:"2026",layout:"gd",cover:"img/gd/icons-tote.webp",c:{bg:"#000000",fg:"#FFFFFF"},lead:"is a set of animal icons that becomes a repeating pattern. Each group member drew one icon; mine was the clown fish.",scope:["Iconography", "Pattern Design", "Mockup"],tools:"Illustrator \u00b7 Photoshop",narrow:false,rows:[[{"src": "img/gd/icons-tote.webp", "r": 1.5}], [{"src": "img/gd/icons-hoodie.webp", "r": 0.75}, {"src": "img/gd/icons-pattern.webp", "r": 1.0}], [{"src": "img/gd/icons-clownfish.webp", "r": 1.0}, {"src": "img/gd/icons-seahorse.webp", "r": 1.0}, {"src": "img/gd/icons-clam.webp", "r": 1.0}]],credit:"Icons: clown fish by Bob Duong \u00b7 seahorse by Delia Riley \u00b7 clam by Riley Ivanitski.",story:[{"h": "One Style, Many Hands", "p": "Every icon was built in Illustrator with Shape Builder and Pathfinder, keeping one consistent style across the set. I combined my clown fish with the group's icons and played with scale, rotation and spacing until the pattern felt balanced, then tested it on tote bag and hoodie mockups in Photoshop."}]},
+  {
+    id:"science-history", title:"Museum Web Redesign", short:"Museum Web Redesign", soon:true, year:"2026", motif:"ab",
+    c:{bg:"#000000", fg:"#FFFFFF", a:"#FFFFFF", b:"#EDEDED", c:"#4A4A4A"},
+    cover:"img/soon.webp", hero:"",
+    lead:"website redesign, a team UX/UI project using A/B testing to find out what actually helps visitors plan a trip and explore the collection.",
+    scope:["UX Research","A/B Testing","Wireframing","UI Design"],
+    rows:[
+      [{w:40,label:"Research board (FigJam)",src:""},{w:30,label:"Version A",src:""},{w:30,label:"Version B",src:""}],
+    ],
+    story:[
+      {h:"Two Answers to One Question", p:"Working as a team, we mapped the current site in FigJam, pulled out the friction points, and built competing versions of key pages. Each pair was tested head-to-head so design decisions came from what visitors did, not what we assumed they'd do."},
+    ],
+    rows2:[[{w:50,label:"Low-fi wireframes",src:""},{w:50,label:"Final homepage",src:""}]],
+  },
+  {
+    id:"myopia", title:"The Myopia Project", soon:true, year:"2026", motif:"lens",
+    c:{bg:"#FFFFFF", fg:"#000000", a:"#000000", b:"#FFFFFF", c:"#9A9A9A"},
+    cover:"img/soon.webp", hero:"",
+    lead:"is an ideation study for a glasses concept, helping people feel comfortable and confident with their glasses on or off. Made with Nick.",
+    scope:["Research","Competitor Analysis","Ideation","Concept Design"],
+    rows:[
+      [{w:36,label:"Ideation wall",src:""},{w:32,label:"Competitor map",src:""},{w:32,label:"Concept sketches",src:""}],
+    ],
+    story:[
+      {h:"Clear Either Way", p:"Most eyewear brands sell frames. We started with the wearer instead: the moments people take their glasses off, put them back on, or feel self-conscious about them. The workshop moved from interviews and competitor analysis into rapid concepts aimed at comfort in both states."},
+    ],
+    rows2:[],
+  },
+];
+
+/* ---------- generative placeholder art (replaced by real images) ---------- */
+function motif(p, variant=0){
+  const {bg,fg,a,b,c} = p.c;
+  const V = 'viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" width="100%" height="100%"';
+  switch(p.motif){
+    case "salt": { // salt pans
+      let r=""; const cols=[a,b,c,"#5C5C5C",b];
+      for(let y=0;y<6;y++)for(let x=0;x<5;x++){
+        const w=150+((x*37+y*13+variant*7)%40), h=88;
+        r+=`<rect x="${x*162+((y%2)*-30)}" y="${y*100+6}" width="${w}" height="${h}" fill="${cols[(x+y+variant)%5]}" opacity="${.55+((x*y)%4)*.12}"/>`;
+      }
+      return `<svg ${V}><rect width="800" height="600" fill="${bg}"/>${r}</svg>`;
+    }
+    case "route": {
+      return `<svg ${V}><rect width="800" height="600" fill="${bg}"/>
+        <path d="M-20 470 C 160 470, 180 250, 360 250 S 560 120, 820 140" stroke="${fg}" stroke-width="22" fill="none" stroke-linecap="round"/>
+        <path d="M-20 470 C 160 470, 180 250, 360 250 S 560 120, 820 140" stroke="${bg}" stroke-width="3" fill="none" stroke-dasharray="18 16"/>
+        ${[[80,470],[360,250],[690,128]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${i==1?26:18}" fill="${i==1?bg:fg}" stroke="${fg}" stroke-width="8"/>`).join("")}
+        <rect x="${520-variant*40}" y="330" width="170" height="250" rx="26" fill="${fg}"/><rect x="${532-variant*40}" y="348" width="146" height="214" rx="14" fill="${b}"/></svg>`;
+    }
+    case "ab": {
+      return `<svg ${V}><rect width="800" height="600" fill="${bg}"/>
+        <rect x="70" y="90" width="300" height="420" fill="${b}"/><rect x="430" y="90" width="300" height="420" fill="${c}"/>
+        <text x="220" y="345" text-anchor="middle" font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="900" font-size="190" fill="${bg}">A</text>
+        <text x="580" y="345" text-anchor="middle" font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="900" font-size="190" fill="${a}">B</text></svg>`;
+    }
+    case "question": {
+      return `<svg ${V}><rect width="800" height="600" fill="${bg}"/>
+        <text x="${430-variant*60}" y="560" text-anchor="middle" font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="900" font-size="680" fill="${fg}" letter-spacing="-20">?</text>
+        <rect x="0" y="${300+variant*40}" width="800" height="300" fill="${bg}" opacity=".0"/>
+        <rect x="${430-variant*60}" y="0" width="400" height="600" fill="${bg}" opacity=".86"/>
+        <circle cx="660" cy="110" r="22" fill="${a}"/></svg>`;
+    }
+    case "lens": {
+      return `<svg ${V}><defs><filter id="bl${variant}"><feGaussianBlur stdDeviation="16"/></filter></defs>
+        <rect width="800" height="600" fill="${bg}"/>
+        <g filter="url(#bl${variant})"><circle cx="270" cy="300" r="150" fill="${c}"/><text x="270" y="335" text-anchor="middle" font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="800" font-size="96" fill="${fg}">Aa</text></g>
+        <circle cx="530" cy="300" r="150" fill="${b}" stroke="${fg}" stroke-width="10"/><text x="530" y="335" text-anchor="middle" font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="800" font-size="96" fill="${fg}">Aa</text>
+        <path d="M120 300 H 0 M680 300 H 800" stroke="${fg}" stroke-width="10"/></svg>`;
+    }
+    case "ring": {
+      return `<svg ${V}><defs><radialGradient id="g${variant}" cx="40%" cy="35%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="${a}"/><stop offset="1" stop-color="${c}"/></radialGradient></defs>
+        <rect width="800" height="600" fill="${bg}"/>
+        <ellipse cx="400" cy="320" rx="${190-variant*20}" ry="${190-variant*20}" fill="none" stroke="url(#g${variant})" stroke-width="58"/>
+        <ellipse cx="400" cy="320" rx="${190-variant*20}" ry="${190-variant*20}" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="2" transform="translate(0,6)"/></svg>`;
+    }
+    case "fold": {
+      return `<svg ${V}><rect width="800" height="600" fill="${bg}"/>
+        <polygon points="160,140 400,90 640,140 640,460 400,510 160,460" fill="${b}"/>
+        <polygon points="400,90 640,140 640,460 400,510" fill="${c}" opacity=".55"/>
+        <path d="M400 90 V510 M160 300 H640" stroke="${fg}" stroke-width="2" stroke-dasharray="10 8"/></svg>`;
+    }
+  }
+}
+function slot(p, item, i){
+  if(item.src) return `<img src="${item.src}" alt="${item.label}">`;
+  const {bg,fg,b,c} = p.c;
+  const fills=[b,c,p.c.a];
+  // alternate between motif crops and flat color plates, like a real mosaic
+  const useMotif = (i%3===0);
+  const inner = useMotif ? motif(p, i%3) :
+     `<div style="position:absolute;inset:0;background:${fills[i%3]}"></div>`;
+  const tone = useMotif ? fg : (i%3===2 && p.c.a!==fg ? fg : bg);
+  return `${inner}<span class="slot" style="color:${tone}">IMAGE: ${item.label}</span>`;
+}
+
+/* ---------- render ---------- */
+const grid = document.getElementById("grid");
+grid.innerHTML = PROJECTS.map(p=>p.soon?`
+  <div class="tile soon" aria-label="${p.title}, coming soon">
+    <div class="art"><img src="${p.cover}" alt="${p.title}, coming soon"><span class="soon-badge">Coming soon</span></div>
+    <div class="cap"><b>${p.short||p.title}</b><span>Coming soon</span></div>
+  </div>`:`
+  <a class="tile" href="#${p.id}" aria-label="${p.title}">
+    <div class="art">${p.coverVideo?`<video src="${p.coverVideo}" poster="${p.coverPoster||p.cover}" autoplay muted loop playsinline preload="auto" aria-label="${p.title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>`:p.cover?`<img src="${p.cover}" alt="${p.title}" style="object-position:${p.coverPos||"center"}">`:motif(p,0)}</div>
+    <div class="cap"><b>${p.short||p.title}</b><span>${p.scope.slice(0,2).join(", ")}</span></div>
+  </a>`).join("");
+
+function renderProject(p){
+  const live = PROJECTS.filter(x=>!x.soon), i = live.indexOf(p), nx = live[(i+1)%live.length];
+  if(p.layout==="case"){ renderCase(p,nx); return; }
+  if(p.layout==="gd"){ renderGD(p,nx); return; }
+  const {bg,fg} = p.c;
+  let n=0;
+  const rows = rs => rs.map(r=>`<div class="row">${r.map(it=>`<div style="flex:${it.w} 1 0">${slot(p,it,n++)}</div>`).join("")}</div>`).join("");
+  const stories = p.story.map(s=>`<div class="story"><h2>${s.h}</h2><p>${s.p}</p></div>`);
+  document.getElementById("project").innerHTML = `
+   <div style="background:${bg};color:${fg}">
+    <div class="hero"><div class="art">${p.hero?`<img src="${p.hero}" alt="">`:motif(p,1)}</div>
+      <h1 style="color:${fg};text-shadow:0 2px 30px rgba(0,0,0,.25)">${p.title}</h1></div>
+    <div class="lead"><p>${p.fullLead?p.lead:`<b>${p.title}</b> ${p.lead}`}</p>
+      <div class="scope"><b>Project Scope:</b>${p.scope.join("<br>")}<br><br><b>Year:</b>${p.year}</div></div>
+    ${rows(p.rows)}
+    ${stories[0]||""}
+    ${rows(p.rows2||[])}
+    ${stories.slice(1).join("")}
+    <a class="nextp" href="#${nx.id}"><small>Next project</small><span>${nx.short||nx.title} →</span></a>
+   </div>`;
+}
+
+function renderCase(p,nx){
+  const root=document.getElementById("project");
+  root.innerHTML = document.getElementById("tpl-"+p.id).innerHTML +
+    `<div style="background:#0B0B0B;color:#fff"><a class="nextp" href="#${nx.id}"><small>Next project</small><span>${nx.short||nx.title} →</span></a></div>`;
+  const links=[...root.querySelectorAll(".cs-nav a")];
+  links.forEach(a=>a.addEventListener("click",e=>{e.preventDefault();
+    const t=document.getElementById(a.dataset.t); window.scrollTo({top:t.getBoundingClientRect().top+scrollY-60,behavior:"smooth"});}));
+  const secs=links.map(a=>document.getElementById(a.dataset.t));
+  const spy=()=>{let k=0;secs.forEach((s,j)=>{if(s.getBoundingClientRect().top<window.innerHeight*.4)k=j});
+    links.forEach((a,j)=>a.classList.toggle("on",j===k));};
+  window.onscroll=spy; spy();
+  const lb=root.querySelector("#lb");
+  root.querySelectorAll("[data-lb]").forEach(b=>b.addEventListener("click",()=>{lb.querySelector("img").src=b.querySelector("img").src;lb.classList.add("on");}));
+  lb.addEventListener("click",()=>lb.classList.remove("on"));
+}
+
+function renderGD(p,nx){
+  const {bg,fg}=p.c; const first=(p.rows[0]||[])[0];
+  const row=r=>`<div class="gd-row"${r.length===1&&r[0].r<0.8?' style="max-width:760px;margin:0 auto;width:100%"':""}>${r.map(it=>`<figure style="flex:${it.r} 1 0;aspect-ratio:${it.r};position:relative"${it.screen?"":" data-lb"}><img src="${it.src}" alt="${p.title}" loading="lazy">${it.screen?`<video src="${it.screen.v}" poster="${it.screen.poster}" autoplay muted loop playsinline preload="auto" style="position:absolute;left:${it.screen.box[0]}%;top:${it.screen.box[1]}%;width:${it.screen.box[2]}%;height:${it.screen.box[3]}%;object-fit:cover;display:block"></video>${it.screen.over?`<img src="${it.screen.over[0]}" alt="" style="position:absolute;left:${it.screen.over[1]}%;top:${it.screen.over[2]}%;width:${it.screen.over[3]}%;height:auto;pointer-events:none">`:""}`:""}</figure>`).join("")}</div>`;
+  const rest=p.rows.slice(0); const mid=p.story.length?Math.min(2,rest.length):rest.length;
+  document.getElementById("project").innerHTML=`
+   <div class="gd" style="--bg:${bg};--fg:${fg}">
+    <div class="gd-hero"><div>${p.wip?`<div class="wip">Work in progress</div>`:""}${p.titleImg?`<h1><img src="${p.titleImg}" alt="${p.title}" style="display:block;width:clamp(240px,34vw,520px);height:auto;margin:0 auto"></h1>`:`<h1>${p.title}</h1>`}</div></div>
+    <div class="lead"><p>${p.fullLead?p.lead:`<b>${p.title}</b> ${p.lead}`}</p>
+      <div class="scope"><b>Project Scope:</b>${p.scope.join("<br>")}<br><br><b>Tools:</b>${p.tools}<br><br><b>Year:</b>${p.year}</div></div>
+    ${p.yt?`<div class="gd-video"><a class="yt" href="https://www.youtube.com/watch?v=${p.yt}" target="_blank" rel="noopener" data-yt="${p.yt}"><img src="${p.cover}" alt="${p.title}, watch on YouTube"><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="yt-l">Watch the film ↗</span></a></div>`:""}
+    ${p.embed?`<div class="gd-live"><div class="gd-live-h"><span>Live: move your cursor across the poster</span><span>← broken · finished →</span></div><iframe src="${p.embed}" title="${p.title} interactive poster"></iframe></div>`:""}
+    ${p.blocks?p.blocks.map(b=>b.t==="rows"?`<div class="gd-imgs">${b.rows.map(row).join("")}</div>`:b.t==="text"?`<div class="story"><h2>${b.h}</h2><p>${b.p}</p></div>`:`<div class="gd-live" style="padding-top:clamp(10px,1.2vw,18px)"><div class="gd-live-h"><span>${b.label}</span><span>${b.hint}</span></div><iframe src="${b.src}" title="${b.label}" style="height:${b.h}"></iframe></div>`).join(""):""}
+    <div class="gd-imgs${p.narrow?" narrow":""}">${rest.slice(0,mid).map(row).join("")}</div>
+    ${p.story.map(s=>`<div class="story"><h2>${s.h}</h2><p>${s.p}</p></div>`).join("")}
+    ${rest.length>mid?`<div class="gd-imgs${p.narrow?" narrow":""}">${rest.slice(mid).map(row).join("")}</div>`:""}
+    ${p.credit?`<p class="gd-credit">${p.credit}</p>`:""}
+    <a class="nextp" href="#${nx.id}"><small>Next project</small><span>${nx.short||nx.title} →</span></a>
+   </div><div class="lb" id="lb"><img alt=""></div>`;
+  const root=document.getElementById("project"), lb=root.querySelector("#lb");
+  const yt=root.querySelector("[data-yt]");
+  if(yt && !/claude|claudeusercontent/.test(location.hostname)){
+    yt.addEventListener("click",e=>{e.preventDefault();
+      yt.outerHTML=`<iframe class="yt-frame" src="https://www.youtube-nocookie.com/embed/${yt.dataset.yt}?autoplay=1&rel=0" title="${p.title}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;});
+  }
+  root.querySelectorAll("[data-lb]").forEach(b=>b.addEventListener("click",()=>{lb.querySelector("img").src=b.querySelector("img").src;lb.classList.add("on");}));
+  lb.addEventListener("click",()=>lb.classList.remove("on"));
+}
+
+function route(){
+  window.onscroll=null;
+  const h = (location.hash||"").slice(1);
+  const p = PROJECTS.find(x=>x.id===h && !x.soon);
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  if(p){ renderProject(p); document.getElementById("v-project").classList.add("on"); window.scrollTo(0,0); }
+  else if(h==="about"||h==="contact"){ document.getElementById("v-about").classList.add("on"); window.scrollTo(0,0); }
+  else {
+    document.getElementById("v-home").classList.add("on");
+    window.scrollTo(0,0);
+  }
+}
+addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>

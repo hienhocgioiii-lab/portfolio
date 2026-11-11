@@ -1,0 +1,670 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Salt Mascot Night</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Single dark look on purpose: a black page with only him on it. */
+:root { --bg: #fff; --line: #000; color-scheme: light; }
+html, body { height: 100%; }
+body { background: var(--bg); margin: 0; overflow: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+/* thin white outline so his black coat and stick legs show on black */
+.sm-svg, .sm-flyhat svg {
+  filter: drop-shadow(1.2px 0 0 var(--line)) drop-shadow(-1.2px 0 0 var(--line))
+          drop-shadow(0 1.2px 0 var(--line)) drop-shadow(0 -1.2px 0 var(--line));
+}
+.sm-gust path { stroke: var(--line); }
+.sm-wrap:focus-visible { outline-color: var(--line); }
+</style>
+
+<script>
+/* Salt mascot: drop-in walking character for a web page.
+   Usage: put salt-mascot.js next to your HTML file and add  a script tag pointing at salt-mascot.js (with defer)  before the closing body tag.
+   Optional controls: SaltMascot.wind(), .hide(), .nap(), .wave(), .wander() */
+(function () {
+  if (window.SaltMascot) return;
+var PARTS = {"body": {"x": 86, "y": 118, "w": 212, "h": 221, "src": "data:image/png;base64,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"}, "hat": {"x": 83, "y": 0, "w": 173, "h": 119, "src": "data:image/png;base64,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"}, "head": {"x": 115, "y": 36, "w": 131, "h": 105, "src": "data:image/png;base64,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"}, "browL": {"x": 132, "y": 61, "w": 34, "h": 11, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAALCAYAAAAa5F88AAAA5ElEQVR42sXULUtEQRSH8d9dBIsgNy++IFi2WVQwmASDdqN+CPE76AfYarPJhjUI4gui1Wpai2gwGU1jmYXhcu9eBB3/cNLhzPNwmJmiLEuZsoilWLO4wPO4WbSIBGzgsQWykEDSWm2Ze8Vcm0jAOt4bIGu/tKkrbDWJBDzEbeTIdJ1IkD9Fp0bi/B9EdCoSx5jJ7HCaigQ84QifGSUucZC+moAu3rCJ2z+AXmOU1ABf4+ZUlNiPEnCHExz+AHJTgaxgHns4wz36E2/rhH9kGzvo4aUCGuGjZqYbpZYbztzFsK7xDWTBMLbZR9UJAAAAAElFTkSuQmCC"}, "eyeL": {"x": 146, "y": 68, "w": 16, "h": 15, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAPCAYAAADtc08vAAAAu0lEQVR42qWTsQ4BQRCGvzuaKxQbUUkkEnoewJU6jUriLXQeQq1V8QJaIa7yEnpR0q/msCZzd7vxJdv8/8yfmc1uZIwhx/IlUjRX/xAXFFpFe+sHV6iLwiNwdc4Q6AAzYAdkwPpnJGcFl3Ye1kdnAuzLAizVpEAWK8YGP85FE1j8SeUEPcIYyYBmYEBLBlwCA9RL/Dtg4Nm8BO61JEmkcQOewLikeQss3L8gWQFd4KR4U2Be9ZQlDeChGS+v9SBR+CS/8wAAAABJRU5ErkJggg=="}, "browR": {"x": 184, "y": 51, "w": 30, "h": 17, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAARCAYAAADKZhx3AAABE0lEQVR42r3VsSuFYRTH8c97ew1K6c5mC4OFSVIGm8lixWS44yWU8RYGcotBuZsysxikZGVQ/gElRn+AYnlu3eh1X/d5OPX0DOecvuf3nNN5smq1KqHV0CwTWJHWmhjBzX+CF3CPR0zho+N8szwSNog1rHeJa8OzWMXTuMBbCejXAp57UVzDQeQrDWGjjOJhHIdqY6HL4W78pHg+9G8i0fDt4aRouAZQx1bCaT/FNh6KpvoQKwmBq9gtcrbBV5hJALsO6i67BeaYTQDdxw5eyibkmIwALqHVS2IFr7/MOcN42EKtXiuu4Khk7Cb6wk6+w1xMb9oLpF7gvw2ADA28oz/4zmPAWcd/PIZFjAZgC0/+yD4BaFcs/Joc0LUAAAAASUVORK5CYII="}, "eyeR": {"x": 194, "y": 63, "w": 13, "h": 15, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAPCAYAAAA/I0V3AAAAtklEQVR42pXSMW7CQBBA0efFjUsLRBV6SkQ6lCtwATqkHIQDpKVOF+AINDQ5QZQDRHLDDZAoSNJ4kWXZif2b1ezOn91ZTZLnuQbWeNVCqMWP5doqwCDLsmp8xhLP2GKBMT5xi0lJ5XkZCoxaLlhhB2ll8+Jv3vCNQ+zpRTf2SGNPR90pAob68RTw0FOaBHz0lN6D/tyleUfhgFNSm72ff6SkafZmLcmbKNQnQvkp8XCKL1zrFX4BZswYIbrZuvAAAAAASUVORK5CYII="}, "mouth": {"x": 183, "y": 119, "w": 23, "h": 10, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAKCAYAAABfYsXlAAAAhklEQVR42rXQMQoCMRRF0ZNhCjuZVpdg4wJcgaW4sekFXYRg5R7chG7ARquxyUAICDokFx78X+SS/0LXdf5ghkXMMiad3zijh5DJV9hnj9amMW+TZVCWYxOHq/LsxlqGCnINNipR6+cB2mQZSgjzWkZOPwhuuOAQZWm+1pKyxRMP3PGaesoHM+wR0XrQaDMAAAAASUVORK5CYII="}};
+  /* ---------- setup ---------- */
+  var INK = '#111', PAPER = '#fff';
+  var VB = { x: 40, y: -8, w: 300, h: 388 };   // drawing units (the original artwork's pixels)
+  var GROUND = 372, HIPY = 326, HIPS = [150, 232], THIGH = 25, SHIN = 25;
+  var SHOULDERS = [[124, 190], [246, 190]], ARM = 50;
+  var H = 72, S = H / VB.h, W = Math.round(VB.w * S);   // on-screen size in px
+  var HAT_BOX = { x: 78, y: -4, w: 182, h: 128 };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var css = `
+  .sm-wrap{position:fixed;left:0;top:0;width:${W}px;height:${H}px;z-index:9999;cursor:pointer;
+    user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;will-change:transform;touch-action:manipulation}
+  .sm-wrap:focus-visible{outline:2px dashed ${INK};outline-offset:4px;border-radius:6px}
+  .sm-svg{display:block;overflow:visible;width:${W}px;height:${H}px}
+  .sm-hatless .sm-hat{display:none}
+  .sm-flyhat{position:fixed;left:0;top:0;z-index:10000;pointer-events:none;will-change:transform}
+  .sm-gust{position:fixed;left:0;top:0;width:100%;height:100%;z-index:9998;pointer-events:none;overflow:hidden}
+  .sm-gust svg{position:absolute;left:0;animation:sm-gust var(--dur) linear forwards;opacity:0}
+  @keyframes sm-gust{0%{transform:translateX(var(--from));opacity:0}15%{opacity:.5}80%{opacity:.5}100%{transform:translateX(var(--to));opacity:0}}
+  `;
+  var styleEl = document.createElement('style');
+  styleEl.textContent = css;
+  document.head.appendChild(styleEl);
+
+  function img(k, cls) {
+    var p = PARTS[k];
+    return '<image class="' + (cls || '') + '" href="' + p.src + '" x="' + p.x + '" y="' + p.y + '" width="' + p.w + '" height="' + p.h + '"/>';
+  }
+  var HAT_WHITE = '<ellipse cx="171" cy="64" rx="84" ry="29" transform="rotate(-18 171 64)" fill="' + PAPER + '"/>' +
+    '<path d="M122,58 C120,20 160,3 182,12 C195,18 198,29 194,40 Z" fill="' + PAPER + '"/>';
+  var HAT = HAT_WHITE + img('hat');
+
+  var SVG =
+    '<svg class="sm-svg" viewBox="' + VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h + '" aria-hidden="true">' +
+    '<g class="sm-flip">' +
+      '<g fill="none" stroke="' + INK + '" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path class="sm-leg0"/><path class="sm-leg1"/>' +
+      '</g>' +
+      '<g class="sm-rig">' +
+        '<g fill="none" stroke="' + INK + '" stroke-width="10" stroke-linecap="round"><path class="sm-arm0"/><path class="sm-arm1"/></g>' +
+        '<path d="M134,132 L230,132 L290,328 Q192,334 94,330 Z" fill="' + PAPER + '"/>' + img('body') +
+        '<g class="sm-head">' +
+          '<g class="sm-hat">' + HAT + '</g>' +
+          '<ellipse cx="180" cy="88" rx="60" ry="48" fill="' + PAPER + '"/>' + img('head') +
+          '<g class="sm-gaze">' +
+            img('eyeL', 'sm-eyeL') + img('eyeR', 'sm-eyeR') +
+            '<path class="sm-eyesv" fill="none" stroke="' + INK + '" stroke-width="7" stroke-linecap="round"/>' +
+          '</g>' +
+          img('browL', 'sm-browL') + img('browR', 'sm-browR') +
+          img('mouth', 'sm-mouthimg') +
+          '<path class="sm-mouthv" fill="none" stroke="' + INK + '" stroke-width="8" stroke-linecap="round"/>' +
+          '<path class="sm-extra" fill="' + PAPER + '" stroke="' + INK + '" stroke-width="4" stroke-linejoin="round"/>' +
+        '</g>' +
+      '</g>' +
+    '</g></svg>';
+
+  /* expressions: his own brows/eyes, tilted and moved; mouths in his line weight */
+  var C = { browL: [149, 66], browR: [199, 59.5], eyeL: [154, 75.5], eyeR: [200.5, 70.5] };
+  var EXPR = {
+    neutral:   { bl: [0, 0, 0],    br: [0, 0, 0],    es: 1,    eyes: 'img',   mouth: 'img' },
+    happy:     { bl: [-14, 0, -4], br: [16, 0, -4],  es: 1,    eyes: 'M147,78 q7,-8 14,0 M194,73 q6,-8 13,0', mouth: 'M181,119 q13,10 26,0' },
+    annoyed:   { bl: [16, 1, 4],   br: [-14, -1, 5], es: 0.7,  eyes: 'img',   mouth: 'M183,128 q11,-8 23,0' },
+    scared:    { bl: [-26, 2, -6], br: [30, -2, -5], es: 1.3,  eyes: 'img',   mouth: 'M181,125 q3.5,-4 7,0 q3.5,4 7,0 q3.5,-4 7,0', extra: 'M228,40 q9,12 0,18 q-9,-6 0,-18 Z' },
+    surprised: { bl: [-8, 0, -9],  br: [12, 0, -9],  es: 1.35, eyes: 'img',   mouth: 'M195,118 a5,6.5 0 1,0 0.1,0 Z' },
+    sleepy:    { bl: [-6, 0, 3],   br: [14, 0, 4],   es: 1,    eyes: 'M147,74 q7,6 14,0 M194,69 q6,6 13,0', mouth: 'M195,121 a3.5,3.5 0 1,0 0.1,0 Z' }
+  };
+
+  var wrap = document.createElement('div');
+  wrap.className = 'sm-wrap';
+  wrap.setAttribute('role', 'img');
+  wrap.setAttribute('tabindex', '0');
+  wrap.setAttribute('aria-label', 'The Salt mascot, a little man in a wide hat walking along the bottom of the page');
+  wrap.innerHTML = SVG;
+  var q = function (c) { return wrap.querySelector('.' + c); };
+  var el = {
+    flip: q('sm-flip'), rig: q('sm-rig'), head: q('sm-head'), gaze: q('sm-gaze'),
+    leg: [q('sm-leg0'), q('sm-leg1')], arm: [q('sm-arm0'), q('sm-arm1')],
+    eyeL: q('sm-eyeL'), eyeR: q('sm-eyeR'), eyesv: q('sm-eyesv'),
+    browL: q('sm-browL'), browR: q('sm-browR'),
+    mouthimg: q('sm-mouthimg'), mouthv: q('sm-mouthv'), extra: q('sm-extra')
+  };
+
+  /* ---------- state ---------- */
+  var st = {
+    x: 0, gy: 0, vx: 0, vy: 0, sp: 0, tx: 0, ty: 0, maxV: 0, moving: false, arrive: null, free: false,
+    face: 1, flip: 1, forceFace: 0,
+    phase: 0, gait: 0,
+    jy: 0, jvy: 0, sink: 0, sinkT: 0, crouch: 0, crouchT: 0, lean: 0, leanT: 0,
+    headTilt: 0, squash: 0,
+    pose: 'stand', poseT: 0,       // stand | sit | panic | fists | wave | reach
+    stomp: 0,
+    mode: 'idle', exprName: 'neutral',
+    ex: { bl: [0, 0, 0], br: [0, 0, 0], es: 1 }, blink: 0
+  };
+  var mouse = { x: -9999, y: -9999 };
+  var fleeCooldown = 0, noFleeUntil = 0, clicks = 0, clickReset = 0;
+  var hat = { down: false, x: 0, y: 0, el: null, flying: false };
+
+  function now() { return performance.now(); }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function minX() { return 4; }
+  function maxX() { return Math.max(4, innerWidth - W - 4); }
+  function groundTop() { return innerHeight - H - 2; }
+  function minY() { return 4; }
+  function maxY() { return groundTop(); }
+  function center() { return { x: st.x + W / 2, y: st.gy + H * 0.45 + st.sink }; }
+  function distMouse() { var c = center(); return Math.hypot(mouse.x - c.x, mouse.y - c.y); }
+
+  function expr(name) {
+    if (st.exprName === name) return;
+    st.exprName = name;
+    var e = EXPR[name];
+    el.eyeL.style.display = el.eyeR.style.display = e.eyes === 'img' ? '' : 'none';
+    el.eyesv.setAttribute('d', e.eyes === 'img' ? '' : e.eyes);
+    el.mouthimg.style.display = e.mouth === 'img' ? '' : 'none';
+    el.mouthv.setAttribute('d', e.mouth === 'img' ? '' : e.mouth);
+    el.mouthv.setAttribute('fill', /a[\d.]/.test(e.mouth) ? INK : 'none');
+    el.extra.setAttribute('d', e.extra || '');
+  }
+
+  function walkTo(x, speed, free, y) {
+    return new Promise(function (res) {
+      st.free = !!free;
+      st.tx = free ? x : clamp(x, minX(), maxX());
+      st.ty = clamp(y === undefined ? st.gy : y, minY(), maxY());
+      st.maxV = speed; st.moving = true;
+      st.arrive = function (ok) { st.arrive = null; st.moving = false; res(ok); };
+    });
+  }
+  function hop(v) { if (st.jy === 0) st.jvy = -(v || 260); }
+
+  /* ---------- behaviour runner ---------- */
+  var tok = 0;
+  function start(fn) {
+    var my = ++tok;
+    if (st.arrive) st.arrive(false);
+    st.moving = false;
+    st.pose = 'stand'; st.forceFace = 0; st.leanT = 0; st.crouchT = 0; st.stomp = 0;
+    var dead = function () { return my !== tok; };
+    Promise.resolve().then(function () { return fn(dead); })
+      .catch(function (e) { console.error(e); })
+      .then(function () { if (!dead()) { st.mode = 'idle'; start(pickNext); } });
+  }
+
+  /* ---------- behaviours ---------- */
+  async function idle(dead, ms) {
+    st.mode = 'idle';
+    expr(Math.random() < 0.7 ? 'neutral' : 'happy');
+    var end = now() + ms;
+    while (now() < end) {
+      await wait(rand(700, 1600)); if (dead()) return;
+      if (distMouse() > 260 && Math.random() < 0.45) st.forceFace = -st.face;   // look around
+    }
+  }
+
+  async function wander(dead) {
+    st.mode = 'wander';
+    expr('neutral');
+    var a = rand(0, Math.PI * 2), r = rand(140, 420);
+    var tx = st.x + Math.cos(a) * r, ty = st.gy + Math.sin(a) * r * 0.75;
+    if (tx < minX() + 40 || tx > maxX() - 40) tx = st.x - Math.cos(a) * r;
+    if (ty < minY() + 30 || ty > maxY() - 10) ty = st.gy - Math.sin(a) * r * 0.75;
+    if (!await walkTo(tx, rand(55, 75), false, ty)) return;
+    await idle(dead, rand(1200, 3400));
+  }
+
+  async function wave(dead) {
+    st.mode = 'wave';
+    expr('happy');
+    st.forceFace = mouse.x < center().x ? -1 : 1;
+    st.pose = 'wave';
+    await wait(1800); if (dead()) return;
+    st.pose = 'stand';
+    await idle(dead, 700);
+  }
+
+  async function hide(dead) {
+    st.mode = 'sneak';
+    expr('happy');
+    var r = Math.random();
+    if (r < 0.4) {
+      // crouch down below the bottom edge, peek up
+      if (!await walkTo(st.x + rand(-80, 80), 75, false, maxY())) return;
+      st.mode = 'hiding';
+      var end = now() + rand(5000, 8500);
+      while (now() < end) {
+        st.sinkT = H * 0.97; await wait(rand(900, 1700)); if (dead()) return;
+        st.sinkT = H * 0.6; expr(pick(['neutral', 'happy'])); st.forceFace = pick([-1, 1]);
+        await wait(rand(1300, 2400)); if (dead()) return;
+      }
+      st.sinkT = 0;
+      await wait(400); if (dead()) return;
+      st.mode = 'sneak'; hop(300); expr('happy');
+      await wait(800); return;
+    }
+    // slip off the side and peek back in
+    var left = st.x < innerWidth / 2;
+    var off = left ? -W - 10 : innerWidth + 10;
+    var peek = left ? -W * 0.45 : innerWidth - W * 0.55;
+    if (!await walkTo(off, 95, true)) return;
+    st.mode = 'hiding';
+    await wait(rand(1000, 1800)); if (dead()) return;
+    var end2 = now() + rand(5000, 9000);
+    while (now() < end2) {
+      if (!await walkTo(peek, 45, true)) return;
+      st.forceFace = left ? 1 : -1;
+      expr(pick(['neutral', 'happy']));
+      await wait(rand(1500, 2800)); if (dead()) return;
+      st.forceFace = 0;
+      if (Math.random() < 0.55) {
+        if (!await walkTo(off, 110, true)) return;
+        await wait(rand(800, 1600)); if (dead()) return;
+      }
+    }
+    st.mode = 'sneak';
+    if (!await walkTo(left ? 40 : innerWidth - W - 40, 70, true)) return;
+    expr('happy'); hop(280);
+    await wait(700);
+  }
+
+  async function found(dead) {
+    st.mode = 'found';
+    st.sinkT = 0;
+    if (st.x < minX() || st.x > maxX()) { await walkTo(clamp(st.x, minX() + 10, maxX() - 10), 260, true); if (dead()) return; }
+    expr('surprised');
+    await wait(260); if (dead()) return;
+    expr('happy'); hop(320);
+    await wait(650); if (dead()) return;
+    hop(240);
+    await wait(900); if (dead()) return;
+    fleeCooldown = now() + 2500;
+  }
+
+  async function flee(dead, startled) {
+    st.mode = 'flee';
+    st.sinkT = 0; st.pose = 'stand';
+    if (startled) {
+      expr('surprised'); hop(300);
+      await wait(420); if (dead()) return;
+    }
+    expr('scared');
+    st.pose = 'panic';
+    var cc = center(), fdx = cc.x - mouse.x, fdy = cc.y - mouse.y, fd = Math.hypot(fdx, fdy) || 1;
+    var dir = fdx >= 0 ? 1 : -1;
+    var ty = clamp(st.gy + fdy / fd * 260, minY(), maxY());
+    var target = st.x + fdx / fd * rand(260, 360);
+    var edge = dir > 0 ? maxX() : minX();
+    if ((dir > 0 && target > maxX() - 30) || (dir < 0 && target < minX() + 30)) {
+      // cornered: bolt off the screen and sneak back later
+      if (Math.abs(st.x - edge) < 140) {
+        if (!await walkTo(dir > 0 ? innerWidth + 20 : -W - 20, 330, true)) return;
+        st.pose = 'stand';
+        await wait(rand(2500, 4000)); if (dead()) return;
+        expr('scared');
+        var pk = dir > 0 ? innerWidth - W * 0.5 : -W * 0.5;
+        if (!await walkTo(pk, 40, true)) return;
+        st.forceFace = -dir;
+        await wait(1200); if (dead()) return;
+        st.forceFace = 0; expr('neutral');
+        await walkTo(dir > 0 ? maxX() - 30 : minX() + 30, 60, true);
+        fleeCooldown = now() + 3000;
+        return;
+      }
+    }
+    if (Math.abs(target - st.x) < 60 && Math.abs(ty - st.gy) < 60) ty = st.gy < innerHeight / 2 ? maxY() : minY();
+    if (!await walkTo(target, 330, false, ty)) return;
+    fleeCooldown = now() + 3500;
+    st.pose = 'stand';
+    st.mode = 'wary';
+    st.forceFace = mouse.x < center().x ? -1 : 1;
+    await wait(1300); if (dead()) return;
+    expr('neutral');
+    await wait(900);
+  }
+
+  async function annoyed(dead) {
+    st.mode = 'annoyed';
+    st.sinkT = 0;
+    clicks++;
+    clearTimeout(clickReset);
+    clickReset = setTimeout(function () { clicks = 0; }, 5000);
+    noFleeUntil = now() + 3200;
+    expr('annoyed');
+    st.forceFace = mouse.x < center().x ? -1 : 1;
+    if (clicks === 1) {
+      st.pose = 'fists'; st.stomp = 1;
+      await wait(1300);
+    } else if (clicks === 2) {
+      st.pose = 'fists'; st.stomp = 2;
+      await wait(1500);
+    } else {
+      st.pose = 'fists'; st.stomp = 2;
+      await wait(1000); if (dead()) return;
+      st.pose = 'stand'; st.stomp = 0;
+      st.mode = 'storm';
+      var goLeft = center().x < innerWidth / 2;
+      if (!await walkTo(goLeft ? -W - 30 : innerWidth + 30, 85, true)) return;
+      await wait(4200); if (dead()) return;
+      clicks = 0;
+      expr('neutral');
+      if (!await walkTo(goLeft ? 30 : innerWidth - W - 30, 55, true)) return;
+      st.forceFace = goLeft ? -1 : 1;     // a look back over his shoulder
+      await wait(900);
+    }
+  }
+
+  function gust(dir) {
+    var g = document.createElement('div');
+    g.className = 'sm-gust';
+    var baseY = st.gy + H * 0.3;
+    for (var i = 0; i < 7; i++) {
+      var w = rand(140, 260), curl = Math.random() < 0.5;
+      var path = 'M0,12 C' + (w * .2) + ',2 ' + (w * .4) + ',22 ' + (w * .6) + ',12 S' + (w * .9) + ',4 ' + w + ',12' +
+        (curl ? ' c12,0 14,-14 2,-14 c-8,0 -8,8 -2,8' : '');
+      var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      s.setAttribute('width', w + 20); s.setAttribute('height', 30);
+      s.setAttribute('viewBox', '-2 -6 ' + (w + 20) + ' 30');
+      s.innerHTML = '<path d="' + path + '" fill="none" stroke="' + INK + '" stroke-width="2" stroke-linecap="round"/>';
+      s.style.top = clamp(baseY + rand(-140, 40), 0, innerHeight - 30) + 'px';
+      s.style.setProperty('--from', dir > 0 ? (-w - 40) + 'px' : 'calc(100vw + 40px)');
+      s.style.setProperty('--to', dir > 0 ? 'calc(100vw + 40px)' : (-w - 40) + 'px');
+      s.style.setProperty('--dur', rand(1.0, 1.4) + 's');
+      s.style.animationDelay = rand(0, 0.6) + 's';
+      if (dir < 0) s.style.scale = '-1 1';
+      g.appendChild(s);
+    }
+    document.body.appendChild(g);
+    setTimeout(function () { g.remove(); }, 2400);
+  }
+
+  function hatSlot(face) {
+    var ox = (HAT_BOX.x - VB.x) * S, oy = (HAT_BOX.y - VB.y) * S, hw = HAT_BOX.w * S;
+    var top = st.gy + st.sink + st.jy + st.crouch * S;
+    return { x: face < 0 ? st.x + W - ox - hw : st.x + ox, y: top + oy };
+  }
+
+  function blowHat(dir) {
+    var hw = HAT_BOX.w * S, hh = HAT_BOX.h * S;
+    var h = document.createElement('div');
+    h.className = 'sm-flyhat';
+    h.innerHTML = '<svg viewBox="' + HAT_BOX.x + ' ' + HAT_BOX.y + ' ' + HAT_BOX.w + ' ' + HAT_BOX.h + '" width="' + hw + '" height="' + hh +
+      '" style="display:block;transform:scaleX(' + (st.face < 0 ? -1 : 1) + ')">' + HAT + '</svg>';
+    document.body.appendChild(h);
+    hat.el = h; hat.down = true; hat.flying = true;
+    wrap.classList.add('sm-hatless');
+    var s0 = hatSlot(st.face), x0 = s0.x, y0 = s0.y;
+    var landY = clamp(st.gy + H - hh * 0.55 + rand(-60, 60), 10, innerHeight - hh * 0.62);
+    var landX = clamp(x0 + dir * rand(220, 380), 6, innerWidth - hw - 6);
+    var T = 1600, t0 = now();
+    return new Promise(function (res) {
+      (function step() {
+        var t = Math.min(1, (now() - t0) / T);
+        var e = 1 - Math.pow(1 - t, 2);
+        var x = lerp(x0, landX, e);
+        var y = y0 + (landY - y0) * t * t - Math.sin(Math.PI * t) * 80 + Math.sin(t * 16) * 5 * (1 - t);
+        var rot = t < 1 ? dir * 520 * e : dir * 8;
+        h.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + rot + 'deg)';
+        if (t < 1) requestAnimationFrame(step);
+        else { hat.x = landX; hat.y = landY; hat.flying = false; res(); }
+      })();
+    });
+  }
+
+  async function wind(dead) {
+    if (hat.down) return retrieveHat(dead);
+    st.mode = 'wind';
+    var dir = center().x > innerWidth / 2 ? -1 : 1;
+    gust(dir);
+    st.forceFace = -dir;
+    expr('surprised');
+    st.leanT = 9;                        // leans into the wind
+    await wait(420); if (dead()) return;
+    var landed = blowHat(dir);
+    st.pose = 'panic'; expr('scared');
+    await walkTo(st.x + dir * 22, 30);   // gets pushed back a step
+    if (dead()) return;
+    await landed; if (dead()) return;
+    st.leanT = 0;
+    await retrieveHat(dead);
+  }
+
+  async function retrieveHat(dead) {
+    if (!hat.down) return;
+    while (hat.flying) { await wait(100); if (dead()) return; }
+    st.mode = 'fetch';
+    st.pose = 'stand';
+    expr('annoyed');
+    var hw = HAT_BOX.w * S, ox = (HAT_BOX.x - VB.x) * S;
+    var tx = st.x < hat.x ? hat.x - ox - W * 0.15 : hat.x + hw + ox - W * 0.85;
+    if (!await walkTo(tx, 230, false, hat.y + HAT_BOX.h * S * 0.7 - H)) return;
+    st.mode = 'pickup';
+    st.forceFace = hat.x + hw / 2 > center().x ? 1 : -1;
+    st.crouchT = 34; st.pose = 'reach';
+    await wait(320);
+    var h = hat.el, slot = hatSlot(st.forceFace);
+    h.firstChild.style.transform = 'scaleX(' + (st.forceFace < 0 ? -1 : 1) + ')';
+    h.style.transition = 'transform .32s cubic-bezier(.3,1.4,.5,1)';
+    h.style.transform = 'translate(' + slot.x + 'px,' + slot.y + 'px) rotate(0deg)';
+    st.crouchT = 0; st.pose = 'stand';
+    await wait(330);
+    h.remove();
+    hat.el = null; hat.down = false;
+    wrap.classList.remove('sm-hatless');
+    if (dead()) return;
+    expr('happy');
+    await wait(1000);
+  }
+
+  async function nap(dead) {
+    st.mode = 'nap';
+    expr('sleepy');
+    st.pose = 'sit';
+    var end = now() + rand(6000, 9500);
+    while (now() < end) { await wait(400); if (dead()) return; }
+    st.pose = 'stand';
+    expr('neutral');
+    await wait(600);
+  }
+
+  async function enter(dead) {
+    st.mode = 'wander';
+    st.x = innerWidth + 10; st.gy = rand(innerHeight * 0.4, maxY());
+    expr('neutral');
+    if (!await walkTo(innerWidth - W - 160, 65, true)) return;
+    await wave(dead);
+  }
+
+  function pickNext(dead) {
+    if (hat.down) return retrieveHat(dead);
+    if (st.x < -W * 0.2 || st.x > innerWidth - W * 0.8) return walkTo(clamp(st.x, minX() + 20, maxX() - 20), 65, true);
+    if (reduce) return pick([idle, idle, wave, nap])(dead, rand(2500, 4500));
+    var r = Math.random() * 100;
+    if (r < 45) return wander(dead);
+    if (r < 57) return idle(dead, rand(1800, 3500));
+    if (r < 64) return wave(dead);
+    if (r < 79) return hide(dead);
+    if (r < 88) return wind(dead);
+    return nap(dead);
+  }
+
+  /* ---------- input ---------- */
+  function onMove(e) {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    if (reduce || e.pointerType === 'touch') return;
+    if (distMouse() > 85) return;
+    var m = st.mode, t = now();
+    if (['flee', 'annoyed', 'found', 'storm', 'pickup', 'wind'].indexOf(m) >= 0) return;
+    if (t < noFleeUntil) return;
+    if (m === 'hiding') return start(found);
+    if (m === 'nap') return start(function (d) { return flee(d, true); });
+    if (t < fleeCooldown) { expr('scared'); return; }
+    start(function (d) { return flee(d, false); });
+  }
+  function onPoke(e) {
+    e.preventDefault();
+    if (st.mode === 'storm' || st.mode === 'pickup') return;
+    if (e.clientX != null) { mouse.x = e.clientX; mouse.y = e.clientY; }
+    start(annoyed);
+  }
+  window.addEventListener('pointermove', onMove, { passive: true });
+  document.addEventListener('pointerleave', function () { mouse.x = mouse.y = -9999; });
+  wrap.addEventListener('click', onPoke);
+  wrap.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') onPoke(e); });
+  window.addEventListener('resize', function () {
+    if (st.mode === 'hiding' || st.mode === 'storm') return;
+    st.x = clamp(st.x, minX(), maxX()); st.gy = clamp(st.gy, minY(), maxY());
+  });
+
+  /* ---------- body mechanics ---------- */
+  function legPath(hx, hy, fx, fy, toe) {
+    // two-bone leg, knee bends forward
+    var dx = fx - hx, dy = fy - hy, d = Math.min(Math.hypot(dx, dy), THIGH + SHIN - 0.01);
+    var a = Math.atan2(dy, dx);
+    var b = Math.acos(clamp((THIGH * THIGH + d * d - SHIN * SHIN) / (2 * THIGH * d), -1, 1));
+    var kx = hx + THIGH * Math.cos(a - b), ky = hy + THIGH * Math.sin(a - b);
+    var tx = fx + 11 * Math.cos(toe), ty = fy + 11 * Math.sin(toe);
+    return 'M' + hx.toFixed(1) + ',' + hy.toFixed(1) + ' L' + kx.toFixed(1) + ',' + ky.toFixed(1) +
+      ' L' + fx.toFixed(1) + ',' + fy.toFixed(1) + ' L' + tx.toFixed(1) + ',' + ty.toFixed(1);
+  }
+  function armPath(i, deg) {
+    var s = SHOULDERS[i], r = deg * Math.PI / 180;
+    return 'M' + s[0] + ',' + s[1] + ' L' + (s[0] + ARM * Math.cos(r)).toFixed(1) + ',' + (s[1] + ARM * Math.sin(r)).toFixed(1);
+  }
+  function eyeT(c, sx, sy) {
+    return 'translate(' + c[0] + ' ' + c[1] + ') scale(' + sx.toFixed(3) + ' ' + sy.toFixed(3) + ') translate(' + (-c[0]) + ' ' + (-c[1]) + ')';
+  }
+  function browT(c, v) {
+    return 'translate(' + v[1].toFixed(2) + ' ' + v[2].toFixed(2) + ') rotate(' + v[0].toFixed(2) + ' ' + c[0] + ' ' + c[1] + ')';
+  }
+
+  var last = now(), blinkAt = now() + 2500, t0 = now();
+  function frame(t) {
+    var dt = Math.min(0.05, (t - last) / 1000); last = t;
+    var time = (t - t0) / 1000;
+
+    /* horizontal motion with easing in and out */
+    if (st.moving) {
+      var dx = st.tx - st.x, dy = st.ty - st.gy, dist = Math.hypot(dx, dy);
+      var accel = st.maxV > 200 ? 1400 : 420;
+      var wantS = Math.min(st.maxV, Math.sqrt(2 * accel * dist));
+      var wx = dist > 0.01 ? dx / dist * wantS : 0, wy = dist > 0.01 ? dy / dist * wantS : 0;
+      st.vx += clamp(wx - st.vx, -accel * dt, accel * dt);
+      st.vy += clamp(wy - st.vy, -accel * dt, accel * dt);
+      if (Math.abs(st.vx) > 6) st.face = st.vx < 0 ? -1 : 1;
+      var nx = st.x + st.vx * dt, ny = st.gy + st.vy * dt;
+      var overshoot = (dx * (st.tx - nx) + dy * (st.ty - ny)) < 0;
+      st.x = nx; st.gy = ny;
+      if ((dist < 1.5 && Math.hypot(st.vx, st.vy) < 25) || overshoot) {
+        st.x = st.tx; st.gy = st.ty; st.vx = 0; st.vy = 0; if (st.arrive) st.arrive(true);
+      }
+    } else {
+      st.vx += clamp(-st.vx, -900 * dt, 900 * dt);
+      st.vy += clamp(-st.vy, -900 * dt, 900 * dt);
+      st.x += st.vx * dt; st.gy += st.vy * dt;
+    }
+    st.sp = Math.hypot(st.vx, st.vy);
+
+    /* gait from real ground speed, so feet don't slide */
+    var speedU = st.sp / S;                         // drawing units / s
+    var cycle = clamp(70 + speedU * 0.09, 70, 150);           // stride length (units)
+    st.phase += 2 * Math.PI * speedU * dt / cycle;
+    st.gait = lerp(st.gait, clamp(st.sp / 25, 0, 1), Math.min(1, dt * 10));
+    var running = st.sp > 180;
+    var A = cycle / 4, lift = running ? 22 : 11;
+
+    /* vertical: jumps, crouch, hiding sink */
+    if (st.jy < 0 || st.jvy < 0) {
+      st.jvy += 1700 * dt; st.jy += st.jvy * dt;
+      if (st.jy >= 0) { st.jy = 0; st.jvy = 0; st.squash = 1; }
+    }
+    st.squash = Math.max(0, st.squash - dt * 6);
+    st.sink = lerp(st.sink, st.sinkT, Math.min(1, dt * 7));
+    st.crouch = lerp(st.crouch, st.crouchT, Math.min(1, dt * 12));
+
+    /* facing: quick squash-turn instead of a mirror snap */
+    var facing = st.moving && Math.abs(st.vx) > 6 ? st.face : (st.forceFace || st.face);
+    if (!st.moving && !st.forceFace && distMouse() < 280 && st.sp < 4) facing = mouse.x < center().x ? -1 : 1;
+    if (!st.moving) st.face = facing;
+    st.flip += clamp(facing - st.flip, -dt * 12, dt * 12);
+    var fl = Math.abs(st.flip) < 0.15 ? 0.15 * Math.sign(st.flip || 1) : st.flip;
+
+    /* legs */
+    var bob = 0, legs = [], airborne = st.jy < -0.5;
+    for (var i = 0; i < 2; i++) {
+      var qp = (st.phase + i * Math.PI) % (2 * Math.PI), fx, fy, toe = 0;
+      if (qp < Math.PI) { var u = qp / Math.PI; fx = A * (1 - 2 * u); fy = 0; }
+      else { var u2 = (qp - Math.PI) / Math.PI, sm = u2 * u2 * (3 - 2 * u2); fx = A * (-1 + 2 * sm); fy = -lift * Math.sin(Math.PI * u2); toe = -0.35 * Math.sin(Math.PI * u2); }
+      fx *= st.gait; fy *= st.gait; toe *= st.gait;
+      if (st.stomp) {                                          // angry stomping, one foot
+        var sp = Math.sin(time * 15);
+        if (i === (st.stomp === 2 ? (Math.sin(time * 7.5) > 0 ? 0 : 1) : 1)) fy = Math.min(fy, -Math.max(0, sp) * 16);
+      }
+      if (airborne) { fy = -10 + st.jvy * 0.012; fx = (i ? -6 : 6); }
+      legs.push([fx, fy, toe]);
+    }
+    bob = st.gait * (running ? 9 : 5) * Math.pow(Math.sin(st.phase), 2);
+    var hipDrop = st.crouch;
+    var sitting = st.pose === 'sit';
+    for (var j = 0; j < 2; j++) {
+      var hx = HIPS[j], hy = HIPY - bob + hipDrop + (sitting ? 26 : 0);
+      if (sitting) {
+        el.leg[j].setAttribute('d', 'M' + hx + ',' + hy + ' L' + (hx + 30) + ',' + (GROUND - 2) + ' L' + (hx + 38) + ',' + (GROUND - 12));
+      } else {
+        el.leg[j].setAttribute('d', legPath(hx, hy, hx + legs[j][0], GROUND + legs[j][1], legs[j][2]));
+      }
+    }
+
+    /* body lean, bob, squash */
+    st.lean = lerp(st.lean, (st.mode === 'wind' ? st.leanT : (running ? 9 : 3) * Math.min(1, st.sp / 60)), Math.min(1, dt * 6));
+    var breathe = st.gait < 0.1 ? Math.sin(time * 2.2) * 1.2 : 0;
+    var sq = st.squash * 0.08;
+    var rigY = -bob + hipDrop + (sitting ? 26 : 0) + breathe;
+    if (st.stomp) rigY += Math.abs(Math.sin(time * 15)) * -3;
+    el.rig.setAttribute('transform',
+      'translate(0 ' + rigY.toFixed(2) + ') rotate(' + st.lean.toFixed(2) + ' 192 ' + HIPY + ') ' +
+      'translate(192 ' + HIPY + ') scale(' + (1 + sq).toFixed(3) + ' ' + (1 - sq).toFixed(3) + ') translate(-192 ' + (-HIPY) + ')');
+
+    /* head: lags behind the body, droops when napping */
+    var tiltT = -st.lean * 0.45 + (sitting ? 9 + Math.sin(time * 1.3) * 2 : 0) + (st.stomp ? Math.sin(time * 15) * 3 : 0);
+    st.headTilt = lerp(st.headTilt, tiltT, Math.min(1, dt * 5));
+    el.head.setAttribute('transform', 'rotate(' + st.headTilt.toFixed(2) + ' 182 140)');
+
+    /* arms, swung opposite the legs */
+    var swing = st.gait * (running ? 34 : 16), a0, a1;
+    a0 = 116 + swing * Math.cos(st.phase);
+    a1 = 64 - swing * Math.cos(st.phase);
+    if (st.gait < 0.1) { a0 += Math.sin(time * 2.2) * 2; a1 -= Math.sin(time * 2.2) * 2; }
+    if (st.pose === 'panic') { a0 = 215 + Math.sin(time * 22) * 14; a1 = -35 - Math.sin(time * 22) * 14; }
+    else if (st.pose === 'fists') { a0 = 150 + Math.sin(time * 30) * 6; a1 = 30 - Math.sin(time * 30) * 6; }
+    else if (st.pose === 'wave') { a1 = -70 + Math.sin(time * 14) * 22; }
+    else if (st.pose === 'reach') { a0 = 75; a1 = 55; }
+    else if (sitting) { a0 = 100; a1 = 80; }
+    if (airborne) { a0 = 150; a1 = 30; }
+    el.arm[0].setAttribute('d', armPath(0, a0));
+    el.arm[1].setAttribute('d', armPath(1, a1));
+
+    /* face: ease brows/eyes toward the expression */
+    var E = EXPR[st.exprName], k = Math.min(1, dt * 14);
+    for (var b2 = 0; b2 < 3; b2++) { st.ex.bl[b2] = lerp(st.ex.bl[b2], E.bl[b2], k); st.ex.br[b2] = lerp(st.ex.br[b2], E.br[b2], k); }
+    st.ex.es = lerp(st.ex.es, E.es, k);
+    el.browL.setAttribute('transform', browT(C.browL, st.ex.bl));
+    el.browR.setAttribute('transform', browT(C.browR, st.ex.br));
+    if (t > blinkAt) { st.blink = 1; blinkAt = t + rand(2200, 5200); }
+    st.blink = Math.max(0, st.blink - dt * 8);
+    var bsy = st.ex.es * (1 - 0.88 * Math.sin(Math.PI * st.blink));
+    el.eyeL.setAttribute('transform', eyeT(C.eyeL, st.ex.es, bsy));
+    el.eyeR.setAttribute('transform', eyeT(C.eyeR, st.ex.es, bsy));
+    var c = center(), mx = mouse.x - c.x, my = mouse.y - (st.gy + H * 0.2), md = Math.hypot(mx, my), gx = 0, gy = 0;
+    if (md < 500 && md > 1) { gx = mx / md * 4 * (fl < 0 ? -1 : 1); gy = my / md * 3; }
+    el.gaze.setAttribute('transform', 'translate(' + gx.toFixed(2) + ' ' + gy.toFixed(2) + ')');
+
+    /* place him */
+    el.flip.setAttribute('transform', 'translate(' + (VB.x + VB.w / 2) + ' 0) scale(' + fl.toFixed(3) + ' 1) translate(' + (-(VB.x + VB.w / 2)) + ' 0)');
+    var y = st.gy + st.sink + st.jy;
+    wrap.style.transform = 'translate(' + st.x.toFixed(2) + 'px,' + y.toFixed(2) + 'px)';
+    requestAnimationFrame(frame);
+  }
+
+  function boot() {
+    document.body.appendChild(wrap);
+    expr('neutral');
+    st.x = innerWidth + 10; st.gy = maxY();
+    requestAnimationFrame(function (t) { last = t; t0 = t; frame(t); });
+    start(enter);
+  }
+  if (document.body) boot(); else document.addEventListener('DOMContentLoaded', boot);
+
+  window.SaltMascot = {
+    wind: function () { if (!reduce) start(wind); },
+    hide: function () { if (!reduce) start(hide); },
+    nap: function () { start(nap); },
+    wave: function () { start(wave); },
+    wander: function () { if (!reduce) start(wander); },
+    expr: expr,
+    el: wrap
+  };
+})();
+
+</script>
+
+</body></html>

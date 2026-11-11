@@ -1,0 +1,281 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Is It Finished?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800&display=swap">
+<style>
+:root{
+  --ground:#e4e5e7;--paper:#ffffff;--ink:#0b0b0b;--red:#ec1c24;
+  --display:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --pw:min(100%, calc((100dvh - 32px) * .75));
+  color-scheme:light;
+}
+html,body{height:100%;margin:0}
+body{
+  background:var(--ground);color:var(--ink);font-family:var(--display);
+  display:flex;flex-direction:column;align-items:center;
+  padding:16px;box-sizing:border-box;justify-content:center;
+  cursor:ew-resize;overflow:hidden;user-select:none;-webkit-user-select:none;
+}
+.poster{
+  width:var(--pw);max-width:100%;aspect-ratio:3/4;background:var(--paper);
+  box-shadow:0 1px 0 rgba(0,0,0,.08),0 18px 40px -24px rgba(0,0,0,.35);
+  outline:none;position:relative;overflow:hidden;
+}
+.poster:focus-visible{box-shadow:0 0 0 3px var(--red)}
+.poster svg,.poster canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
+.t,#scrambled text{font-family:var(--display);font-weight:800}
+</style></head><body>
+
+<div class="poster" id="poster" tabindex="0" role="slider" aria-label="How finished the poster is" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <canvas id="cv"></canvas>
+  <svg id="sv" viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg">
+    <g id="pieces" fill="#0b0b0b" stroke="#0b0b0b" stroke-width="1.2" stroke-linejoin="miter"></g>
+    <g id="type">
+      <g id="scrambled"></g>
+      <g class="t" id="v1blurb" font-size="20.5" letter-spacing="-.5" fill="#0b0b0b">
+        <text x="1160" y="1478" text-anchor="end">An exhibition of works in progress.</text>
+        <text x="1160" y="1508" text-anchor="end">Sketches, drafts and things left unfinished</text>
+        <text x="1160" y="1538" text-anchor="end">on purpose. <tspan fill="#ec1c24">You</tspan> decide when they're done.</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<script>
+(function(){
+  const NS = "http://www.w3.org/2000/svg";
+  const RED = "#ec1c24", INK = "#0b0b0b";
+  const FONT = '"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif';
+  let seed = 20261120;
+  const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed>>>15, 1|seed);
+    t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0)/4294967296; };
+  const sr = () => rnd()*2-1;
+  const ease = t => 1 - Math.pow(1-t, 3);
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const R = (x,y,w,h) => [[x,y],[x+w,y],[x+w,y+h],[x,y+h]];
+  const halves = (x,y,w,h) => [R(x,y,w,h/2), R(x,y+h/2,w,h/2)];
+  const G = {
+    I:(W,H,s)=>[R(0,0,W,s), ...halves((W-s)/2,s,s,H-2*s), R(0,H-s,W,s)],
+    S:(W,H,s)=>[R(0,0,W,s), R(0,0,s,(H+s)/2), R(0,(H-s)/2,W,s), R(W-s,(H-s)/2,s,(H+s)/2), R(0,H-s,W,s)],
+    T:(W,H,s)=>[R(0,0,W,s), ...halves((W-s)/2,s,s,H-s)],
+    F:(W,H,s)=>[...halves(0,0,s,H), R(0,0,W,s), R(0,(H-s)/2-s*.2,W*.8,s)],
+    N:(W,H,s)=>[...halves(0,0,s,H), ...halves(W-s,0,s,H), [[0,0],[s*1.35,0],[W,H],[W-s*1.35,H]]],
+    H:(W,H,s)=>[...halves(0,0,s,H), ...halves(W-s,0,s,H), R(0,(H-s)/2,W,s)],
+    E:(W,H,s)=>[...halves(0,0,s,H), R(0,0,W,s), R(0,(H-s)/2,W*.82,s), R(0,H-s,W,s)],
+    D:(W,H,s)=>{const c=s*1.7; return [...halves(0,0,s,H), R(0,0,W-c,s),
+      [[W-c,0],[W,c],[W-s,c],[W-c,s]], R(W-s,c,s,H-2*c),
+      [[W,H-c],[W-c,H],[W-c,H-s],[W-s,H-c]], R(0,H-s,W-c,s)];},
+    "?":(W,H,s)=>[R(0,0,W,s), R(W-s,0,s,H*.6), R(W*.28,H*.6-s,W*.72,s), R(W*.28,H*.6-s,s,H*.16), R(W*.28,H-s,s,s)]
+  };
+  const blockLines = [
+    {y:40,   H:380, s:84, items:[["I",240],["S",240],[" ",60],["I",240],["T",240]], gap:30},
+    {y:620,  H:380, s:88, items:[["F",262],["I",262],["N",262],["I",262]], gap:24},
+    {y:1030, H:380, s:80, items:[["S",215],["H",215],["E",215],["D",215],["?",160]], gap:24}
+  ];
+  const p1 = [];
+  const host = document.getElementById("pieces");
+  blockLines.forEach(L=>{
+    let x = 40;
+    L.items.forEach(([ch,W])=>{
+      if(ch===" "){ x += W; return; }
+      G[ch](W,L.H,L.s).forEach(poly=>{
+        const pts = poly.map(([px,py])=>[px+x, py+L.y]);
+        const cx = pts.reduce((a,p)=>a+p[0],0)/pts.length;
+        const cy = pts.reduce((a,p)=>a+p[1],0)/pts.length;
+        const k = rnd() < .7 ? 1 : .3;
+        const el = document.createElementNS(NS,"polygon");
+        el.setAttribute("points", pts.map(p=>p.join(",")).join(" "));
+        host.appendChild(el);
+        p1.push({el,cx,cy, dx: sr()*95*k, dy: sr()*120*k + (rnd()<.25 ? sr()*120 : 0),
+          rot: sr()*24*k, order: cx/1200, cur: 0});
+      });
+      x += W + L.gap;
+    });
+  });
+  const tHost = document.getElementById("scrambled");
+  function buildBlockType(){
+    [
+      {x:40, y:562,  size:92, ls:-3.5, segs:[["IS IT FINISHED?",RED]], spread:1.4},
+      {x:40, y:1478, size:27, ls:-.6,  segs:[["Friday ",INK],["11.20.26",RED],[", 5–8 PM",INK]], spread:1},
+      {x:40, y:1514, size:27, ls:-.6,  segs:[["Tyler School of Art + Architecture,",INK]], spread:1},
+      {x:40, y:1550, size:27, ls:-.6,  segs:[["2001 N. 13th St., Philadelphia, PA 19122",RED]], spread:1}
+    ].forEach(L=>{
+      const text = L.segs.map(s=>s[0]).join("");
+      const colors = L.segs.flatMap(([t,c])=>[...t].map(()=>c));
+      const probe = document.createElementNS(NS,"text");
+      probe.setAttribute("x",L.x); probe.setAttribute("y",L.y);
+      probe.setAttribute("font-size",L.size); probe.setAttribute("letter-spacing",L.ls);
+      probe.textContent = text; tHost.appendChild(probe);
+      const chars = [...text];
+      const xs = chars.map((_,i)=>probe.getStartPositionOfChar(i).x);
+      const ws = chars.map((_,i)=>probe.getExtentOfChar(i).width);
+      tHost.removeChild(probe);
+      chars.forEach((ch,i)=>{
+        if(ch===" ") return;
+        const el = document.createElementNS(NS,"text");
+        el.setAttribute("x",xs[i].toFixed(2)); el.setAttribute("y",L.y);
+        el.setAttribute("font-size",L.size); el.setAttribute("fill",colors[i]);
+        el.textContent = ch; tHost.appendChild(el);
+        const cx = xs[i]+ws[i]/2, cy = L.y - L.size*.35;
+        p1.push({el,cx,cy, dx: sr()*70*L.spread, dy: sr()*90*L.spread, rot: sr()*70, order: cx/1200, cur: 0});
+      });
+    });
+  }
+
+  const cv = document.getElementById("cv");
+  const ctx = cv.getContext("2d");
+  const ROWS = 19, BP = 1600/ROWS, PH = "IS IT FINISHED?";
+  let cScale = 1, p2 = [];
+  function sizeCv(){
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = cv.clientWidth || 600;
+    cv.width = Math.round(w*dpr); cv.height = Math.round(w*4/3*dpr);
+    cScale = cv.width/1200;
+  }
+  const capOf = f => { ctx.font = f; return ctx.measureText("H").actualBoundingBoxAscent; };
+  function measure(text, font, ls){
+    ctx.font = font;
+    const chars = [...text], xs = [], ws = [];
+    chars.forEach((c,i)=>{ const w = ctx.measureText(c).width; xs.push(ctx.measureText(text.slice(0,i+1)).width - w + i*ls); ws.push(w); });
+    return {chars, xs, ws, width: ctx.measureText(text).width + (chars.length-1)*ls};
+  }
+  const hits = (b, r) => b.x2 > r.x && b.x1 < r.x+r.w && b.y2 > r.y && b.y1 < r.y+r.h;
+  function piece(g, ch, color, fx, fy, frot, sx, slide, spread){
+    p2.push({g, ch, color, fx, fy, frot, sx, slide,
+      dx: sr()*170*spread, dy: sr()*210*spread,
+      drot: sr()*Math.PI*(rnd()<.3 ? 1 : .4), dscale: 1 + sr()*.5,
+      ph: rnd()*6.28, sp: .5 + rnd()*1.2,
+      order: clamp(fx/1200)*.85 + rnd()*.15, cur: 0});
+  }
+  function words(lines, font, ls, lead, align, tx, ty, spread){
+    const g = {font, cap: capOf(font)};
+    let maxW = 0;
+    lines.forEach((segs,li)=>{
+      const text = segs.map(s=>s[0]).join("");
+      const colors = segs.flatMap(([t,c])=>[...t].map(()=>c));
+      const m = measure(text, font, ls);
+      maxW = Math.max(maxW, m.width);
+      const ox = align==="right" ? tx - m.width : tx;
+      m.chars.forEach((ch,i)=>{ if(ch!==" ") piece(g, ch, colors[i], ox + m.xs[i] + m.ws[i]/2, ty + li*lead, 0, 1, 0, spread); });
+    });
+    return maxW;
+  }
+  function buildTypePoster(){
+    p2 = [];
+    const blurbW = words([
+      [["An exhibition of works in progress.",INK]],
+      [["Sketches, drafts and things left unfinished",INK]],
+      [["on purpose. ",INK],["You",RED],[" decide when they're done.",INK]]
+    ], `800 21px ${FONT}`, -.45, 31, "right", 1178, 44, .8);
+    const infoW = words([
+      [["Friday ",INK],["11.20.26",RED],[", 5–8 PM",INK]],
+      [["Tyler School of Art + Architecture,",INK]],
+      [["2001 N. 13th St., Philadelphia, PA 19122",RED]]
+    ], `500 28px ${FONT}`, -.5, 40, "left", 422, 15*BP + 34, .8);
+    const cap800 = capOf(`800 100px ${FONT}`);
+    const ts = 100 * (BP*3 - 22) / cap800;
+    const tg = {font: `800 ${ts.toFixed(1)}px ${FONT}`}; tg.cap = capOf(tg.font);
+    const tm = measure(PH, tg.font, -ts*.03);
+    const tW = 750, sx = tW / tm.width;
+    tm.chars.forEach((ch,i)=>{ if(ch!==" ") piece(tg, ch, RED, 6 + (tm.xs[i]+tm.ws[i]/2)*sx, 5.5*BP, 0, sx, 0, 1.4); });
+    const knocks = [
+      {x:1200 - blurbW - 44, y:0, w:blurbW + 44, h:BP*2},
+      {x:0, y:4*BP, w:tW + 24, h:BP*3},
+      {x:404, y:15*BP, w:infoW + 40, h:BP*2}
+    ];
+    const cap500 = capOf(`500 100px ${FONT}`);
+    const rs = 100 * BP*.86 / cap500;
+    const rg = {font: `500 ${rs.toFixed(1)}px ${FONT}`}; rg.cap = capOf(rg.font);
+    const unit = measure(PH, rg.font, -rs*.025);
+    const uw = unit.width - rs*.025;
+    const rowText = PH.repeat(Math.ceil(1200/uw) + 2);
+    const rm = measure(rowText, rg.font, -rs*.025);
+    for(let r=0;r<ROWS;r++){
+      const flip = r%2===1, cy = r*BP + BP/2;
+      const shift = -((r*.37 + r*r*.11) % 1) * uw;
+      const slide = (flip ? -1 : 1) * (160 + rnd()*320);
+      rm.chars.forEach((ch,i)=>{
+        if(ch===" ") return;
+        let cx = shift + rm.xs[i] + rm.ws[i]/2;
+        if(flip) cx = 1200 - cx;
+        const b = {x1: cx - rm.ws[i]/2, x2: cx + rm.ws[i]/2, y1: cy - rg.cap/2, y2: cy + rg.cap/2};
+        if(b.x2 < -10 || b.x1 > 1210 || knocks.some(k=>hits(b,k))) return;
+        piece(rg, ch, INK, cx, cy, flip ? Math.PI : 0, 1, slide, 1);
+      });
+    }
+    const rank = g => g===rg ? 0 : g===tg ? 1 : 2;
+    p2.sort((a,b)=>rank(a.g)-rank(b.g));
+    sizeCv();
+  }
+  function drawType(t){
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.textAlign = "center";
+    let lf = "", lc = "";
+    for(const p of p2){
+      const u = p.cur;
+      if(u >= .999) continue;
+      const storm = reduce ? 0 : Math.sin(Math.PI*Math.min(1,u*1.6));
+      const fly = u*u*2.2;
+      const x = p.fx + (p.dx*1.8 + p.slide)*u + p.dx*fly + Math.sin(t*p.sp*2 + p.ph)*40*storm;
+      const y = p.fy + p.dy*1.6*u + Math.abs(p.dy)*fly + Math.cos(t*p.sp*1.6 + p.ph)*40*storm;
+      const rot = p.frot + p.drot*u*2 + Math.sin(t*p.sp + p.ph)*.5*storm;
+      const s = 1 + (p.dscale-1)*u*1.5;
+      ctx.globalAlpha = clamp(1 - (u-.45)/.5);
+      if(p.g.font!==lf) ctx.font = lf = p.g.font;
+      if(p.color!==lc) ctx.fillStyle = lc = p.color;
+      const c = Math.cos(rot)*s*cScale, si = Math.sin(rot)*s*cScale;
+      ctx.setTransform(c*p.sx, si*p.sx, -si, c, x*cScale, y*cScale);
+      ctx.fillText(p.ch, 0, p.g.cap/2);
+    }
+    ctx.globalAlpha = 1;
+  }
+  addEventListener("resize", sizeCv);
+
+  let target = 0;
+  const poster = document.getElementById("poster");
+  const v1blurb = document.getElementById("v1blurb");
+  const setFromX = x => { target = clamp((x / innerWidth - .06) / .88); };
+  addEventListener("pointermove", e => setFromX(e.clientX));
+  addEventListener("pointerdown", e => { setFromX(e.clientX); });
+  addEventListener("touchmove", e => { if(e.touches[0]) setFromX(e.touches[0].clientX); }, {passive:true});
+  addEventListener("message", e => { if(e.data && typeof e.data.x === "number") target = clamp(e.data.x); });
+  poster.addEventListener("keydown", e => {
+    const step = {ArrowRight:.05, ArrowUp:.05, ArrowLeft:-.05, ArrowDown:-.05}[e.key];
+    if(step!==undefined){ target = clamp(target+step); e.preventDefault(); }
+    if(e.key==="Home"){ target=0; e.preventDefault(); }
+    if(e.key==="End"){ target=1; e.preventDefault(); }
+  });
+  function advance(list){
+    for(const p of list){
+      const goal = ease(clamp((target - p.order*.55)/.45));
+      p.cur += reduce ? (goal-p.cur) : (goal-p.cur)*.12;
+      if(Math.abs(goal-p.cur) < .0005) p.cur = goal;
+    }
+  }
+  function frame(now){
+    now = now || 0;
+    advance(p1); advance(p2);
+    for(const p of p1){
+      const b = 1 - p.cur;
+      const wob = reduce ? 0 : Math.sin(Math.PI*p.cur);
+      p.el.style.opacity = clamp(p.cur*1.7 - .25).toFixed(3);
+      p.el.setAttribute("transform",
+        `translate(${(p.dx*2.4*b + Math.sin(now/260 + p.cx)*18*wob).toFixed(2)} ${(p.dy*2.2*b + Math.cos(now/300 + p.cy)*18*wob).toFixed(2)}) rotate(${(p.rot*3*b).toFixed(2)} ${p.cx.toFixed(1)} ${p.cy.toFixed(1)})`);
+    }
+    v1blurb.style.opacity = clamp(target*2.5 - 1.5).toFixed(3);
+    poster.setAttribute("aria-valuenow", Math.round(target*100));
+    if(p2.length) drawType(now/1000);
+    requestAnimationFrame(frame);
+  }
+  const fontsReady = document.fonts
+    ? Promise.all(["500","800"].map(w => document.fonts.load(`${w} 40px Archivo`))).catch(()=>{})
+    : Promise.resolve();
+  fontsReady.then(()=>{ buildBlockType(); buildTypePoster(); });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body></html>
