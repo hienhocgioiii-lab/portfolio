@@ -202,9 +202,9 @@
   .cs-bars i{display:block;height:30px;background:#0B0B0B}
   .cs-bars b{text-align:right}
 
-  .lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;place-items:center;z-index:99;padding:4vw;cursor:zoom-out}
-  .lb.on{display:grid}
-  .lb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;background:#fff}
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:1000;padding:3vh 3vw;cursor:zoom-out;box-sizing:border-box}
+  .lb.on{display:flex}
+  .lb img{display:block;max-width:94vw;max-height:94vh;width:auto;height:auto;object-fit:contain;background:#fff}
 
   @media (max-width:980px){
     .cs-hero{grid-template-columns:1fr}.cs-hero .r{aspect-ratio:1.3/1}
