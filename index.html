@@ -43,7 +43,7 @@
   .intro p span{opacity:.5}
 
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.6vw,24px);padding:0 var(--gutter) 90px}
-  @media (min-width:1000px){.grid{grid-template-columns:1fr 1fr 1fr}}
+  @media (min-width:1000px){.grid{max-width:1180px;margin:0 auto;box-sizing:content-box}}
   .tile{position:relative;display:block;overflow:hidden;aspect-ratio:1.3/1;background:#eee}
   .tile .art{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
   .tile:hover .art{transform:scale(1.025)}
